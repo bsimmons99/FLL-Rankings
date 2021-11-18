@@ -1,0 +1,163 @@
+body {
+    /* padding: 50px; */
+    margin: 0px;
+    font-family: 'Roboto', sans-serif;
+}
+
+header {
+    text-align: center;
+    background-color: coral;
+    border-bottom-style: solid;
+    border-width: 1px;
+}
+
+.header-title {
+    font-size: 150%;
+    font-weight: bold;
+}
+
+.status {
+    background-color: black;
+    padding: 1px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+.sticky-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+.scoresheet {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    margin: auto;
+    padding: 1em;
+    border-style: solid;
+    border-top-style: hidden;
+    border-width: 1px;
+}
+
+.mission {
+    display: flex;
+    flex-direction: column;
+    margin: 1em;
+    background-color: #eeeeee;
+    padding: 1em;
+    padding-top: 5px;
+    padding-left: 0px;
+    border-style: solid;
+    border-color: #007633;
+    border-width: 3px;
+    border-radius: 0px 20px 20px;
+}
+
+.mission-id {
+    /* font-size: x-large; */
+    font-size: 150%;
+    font-weight: bold;
+    background-color: #007633;
+    color: #eeeeee;
+    padding: 5px 0.75em;
+}
+
+.mission-description {
+    /* font-size: large; */
+    font-size: 125%;
+    font-weight: bold;
+}
+
+.quest {
+    display: flex;
+    /* flex-wrap: wrap; */
+    justify-content: space-between;
+    /* align-items: baseline; */
+    align-items: center;
+    margin: 0.5em;
+}
+
+/* .quest-description {
+  font-weight: bold;
+} */
+
+.options {
+    /* font-style: italic; */
+    /* padding: 0.4em; */
+    /* align-self: flex-end; */
+    margin-left: auto;
+    padding: 0.4em;
+    display: flex;
+    /* flex-wrap: wrap; */
+    flex-shrink: 0;
+    justify-content: flex-end;
+}
+
+.options .option {
+    border-style: solid;
+    border-width: 1px;
+    box-sizing: content-box;
+    padding: 0.4em;
+    margin-top: -1px;
+    margin-left: -1px;
+    background-color: white;
+}
+
+.options .option:hover {
+    /* background-color: yellow; */
+    background-color: #f7f7f7;
+}
+
+.options .option.selected {
+    /* background-color: yellow; */
+    background-color: gold;
+}
+
+.red {
+    color: #ff6060;
+}
+
+.orange {
+    color: gold;
+}
+
+.green {
+    color: limegreen;
+}
+
+.options input[type=radio] {
+    /* visibility: hidden; */
+    display: none;
+}
+
+.clickable, button {
+    cursor: pointer;
+    user-select: none;
+    touch-action: manipulation;
+    /* pointer-events: none; */
+}
+
+select, button {
+    font-size: 1em;
+}
+
+[hidden] {
+    display: none;
+}
+
+@media screen and (max-width: 1100px) {
+    body {
+        padding: 0px;
+        font-size: 200%;
+    }
+    .scoresheet {
+        width: 100%;
+        border-style: hidden;
+        padding: 0em;
+    }
+    .sticky-header+.scoresheet {
+        padding-top: 96px;
+    }
+}

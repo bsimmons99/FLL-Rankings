@@ -1,0 +1,310 @@
+{
+    "missions": [
+        {
+            "mission": "M00",
+            "description": "Equiptment Inspection Bonus",
+            "quests": [
+                {
+                    "id": "m00a",
+                    "description": "All team equipment fits in the small inspection area",
+                    "options": ["No", "Yes"]
+                }
+            ]
+        },
+        {
+            "mission": "M01",
+            "description": "Innovation Project Model",
+            "quests": [
+                {
+                    "id": "m01a",
+                    "description": "Does the Innovation Project Model has the following:\nMade of at least two white LEGO® pieces.\nMeasures at least as long as 4 LEGO “studs” in some direction.\nHas any part of it touching the CARGO CONNECTSM circle.",
+                    "options": ["No", "Yes"]
+                }
+            ]
+        },
+        {
+            "mission": "M02",
+            "description": "Unused Capacity",
+            "quests": [
+                {
+                    "id": "m02a",
+                    "description": "The hinged container is completely closed",
+                    "options": ["No", "Yes"]
+                },
+                {
+                    "id": "m02b",
+                    "description": "Number of contents completely in the hinged container",
+                    "options": ["0", "1-5", "6"]
+                }
+            ]
+        },
+        {
+            "mission": "M03",
+            "description": "Unload Cargo Plane",
+            "quests": [
+                {
+                    "id": "m03a",
+                    "description": "The cargo door rests completely down, touching the black frame",
+                    "options": ["No", "Yes"]
+                },
+                {
+                    "id": "m03b",
+                    "description": "The container is completely separate from the plane",
+                    "options": ["No", "Yes"]
+                }
+            ]
+        },
+        {
+            "mission": "M04",
+            "description": "Transportation Journey",
+            "quests": [
+                {
+                    "id": "m04a",
+                    "description": "The truck is completely past its blue end line and is on the mat",
+                    "options": ["No", "Yes"]
+                },
+                {
+                    "id": "m04b",
+                    "description": "The airplane is completely past its blue end line and is on the mat",
+                    "options": ["No", "Yes"]
+                }
+            ]
+        },
+        {
+            "mission": "M05",
+            "description": "Switch Engine",
+            "quests": [
+                {
+                    "id": "m05a",
+                    "description": "The yellow bar rests all the way down/south",
+                    "options": ["No", "Yes"]
+                }
+            ]
+        },
+        {
+            "mission": "M06",
+            "description": "Accident Avoidance",
+            "quests": [
+                {
+                    "id": "m06a",
+                    "description": "The robot is parked over the blue accident-avoidance line at the end of the match",
+                    "options": ["No", "Yes"]
+                },
+                {
+                    "id": "m06b",
+                    "description": "The yellow panel is knocked down",
+                    "options": ["No", "Yes"]
+                },
+                {
+                    "id": "m06c",
+                    "description": "The black frame is knocked down",
+                    "options": ["No", "Yes"]
+                }
+            ]
+        },
+        {
+            "mission": "M07",
+            "description": "Unload Cargo Ship",
+            "quests": [
+                {
+                    "id": "m07a",
+                    "description": "The container is no longer touching the cargo ship’s east deck",
+                    "options": ["No", "Yes"]
+                },
+                {
+                    "id": "m07b",
+                    "description": "The container is completely east of the cargo ship’s east deck",
+                    "options": ["No", "Yes"]
+                }
+            ]
+        },
+        {
+            "mission": "M08",
+            "description": "Air Drop",
+            "quests": [
+                {
+                    "id": "m08a",
+                    "description": "The food package is separated from your helicopter",
+                    "options": ["No", "Yes"]
+                },
+                {
+                    "id": "m08b",
+                    "description": "The other team’s food package is completely in your field’s CARGO CONNECT circle",
+                    "options": ["No", "Yes"]
+                },
+                {
+                    "id": "m08c",
+                    "description": "Both teams have separated their food package from their field’s helicopters",
+                    "options": ["No", "Yes"]
+                }
+            ]
+        },
+        {
+            "mission": "M09",
+            "description": "Train Tracks",
+            "quests": [
+                {
+                    "id": "m09a",
+                    "description": "The train tracks are repaired, resting completely down/west",
+                    "options": ["No", "Yes"]
+                },
+                {
+                    "id": "m09b",
+                    "description": "The train is latched at the end of the tracks",
+                    "options": ["No", "Yes"]
+                }
+            ]
+        },
+        {
+            "mission": "M10",
+            "description": "Sorting Center",
+            "quests": [
+                {
+                    "id": "m10a",
+                    "description": "The light orange container is the only container completely in the blue sorting area box",
+                    "options": ["No", "Yes"]
+                }
+            ]
+        },
+        {
+            "mission": "M11",
+            "description": "Home Delivery",
+            "quests": [
+                {
+                    "id": "m11a",
+                    "description": "The package is on the doorstep, and not touching any equipment",
+                    "options": ["No", "Partly", "Completely"]
+                }
+            ]
+        },
+        {
+            "mission": "M12",
+            "description": "Large Delivery",
+            "quests": [
+                {
+                    "id": "m12a",
+                    "description": "The turbine blade is touching only the blue holder and",
+                    "options": ["No", "The Mat", "Nothing Else"]
+                },
+                {
+                    "id": "m12b",
+                    "description": "The chicken statue is upright with its base in its circle",
+                    "options": ["No", "Partly", "Completely"]
+                }
+            ]
+        },
+        {
+            "mission": "M13",
+            "description": "Platooning Trucks",
+            "quests": [
+                {
+                    "id": "m13a",
+                    "description": "Both trucks are latched together completely outside of home",
+                    "options": ["No", "Yes"]
+                },
+                {
+                    "id": "m13b",
+                    "description": "A truck is latched to the bridge",
+                    "options": ["No", "Yes"]
+                }
+            ]
+        },
+        {
+            "mission": "M14",
+            "description": "Bridge",
+            "quests": [
+                {
+                    "id": "m14a",
+                    "description": "Number of bridge decks that have been lowered onto their center support",
+                    "options": ["0", "1", "2"]
+                }
+            ]
+        },
+        {
+            "mission": "M15",
+            "description": "Load Cargo",
+            "quests": [
+                {
+                    "id": "m15a",
+                    "description": "Number of containers touching only the platooning trucks completely outside of home",
+                    "options": ["0", "1", "2 or more"]
+                },
+                {
+                    "id": "m15b",
+                    "description": "Number of containers touching only the train",
+                    "options": ["0", "1", "2 or more"]
+                },
+                {
+                    "id": "m15c",
+                    "description": "Number of containers touching only the cargo ship’s west deck",
+                    "options": ["0", "1", "2 or more"]
+                }
+            ]
+        },
+        {
+            "mission": "M16",
+            "description": "Cargo Connect",
+            "quests": [
+                {
+                    "id": "m16a",
+                    "description": "Number of containers partly in any circle",
+                    "options": ["0", "1", "2", "3", "4", "5", "6", "7", "8"]
+                },
+                {
+                    "id": "m16b",
+                    "description": "Number of containers completely in any circle",
+                    "options": ["0", "1", "2", "3", "4", "5", "6", "7", "8"]
+                },
+                {
+                    "id": "m16c",
+                    "description": "The blue (not hinged) container is completely in the blue circle",
+                    "options": ["No", "Yes"]
+                },
+                {
+                    "id": "m16d",
+                    "description": "The lime green container is completely in the lime green circle",
+                    "options": ["No", "Yes"]
+                },
+                {
+                    "id": "m16e",
+                    "description": "Number of circles with at least one container completely in them",
+                    "options": ["0", "1", "2", "3", "4", "5", "6"]
+                }
+            ]
+        },
+        {
+            "mission": "M17",
+            "description": "Precision Tokens",
+            "quests": [
+                {
+                    "id": "m17a",
+                    "description": "Number of precision tokens left on the field",
+                    "options": ["0", "1", "2", "3", "4", "5", "6"]
+                }
+            ]
+        },
+        {
+            "mission": "",
+            "description": "Return Loose Items",
+            "quests": [
+                {
+                    "id": "x1",
+                    "description": "1 Turbine Blade, 2 Platooning Trucks, 6 Container Contents, 1 Package, Containers – 4 Gray, 1 Lime Green, 1 Blue, 1 Light Orange & 1 Hinged, 1 Airplane, 1 Truck, 1 Train, 1 Food Package, 6 Precision Tokens, & 1 Chicken Statue",
+                    "options": []
+                }
+            ]
+        },
+        {
+            "mission": "GP",
+            "description": "Gracious Professionalism",
+            "quests": [
+                {
+                    "id": "gpa",
+                    "description": "Gracious Professionalism displayed at the robot game table",
+                    "options": ["Developing 2", "Accomplished 3", "Exceeds 4"]
+                }
+            ]
+        }
+    ],
+    "constraints": []
+}

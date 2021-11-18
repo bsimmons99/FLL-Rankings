@@ -1,0 +1,30 @@
+{
+  "name": "fll-rankings",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "mon": "nodemon ./bin/www/"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "dotenv": "^10.0.0",
+    "express": "~4.16.1",
+    "morgan": "~1.9.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15",
+    "supports-color": "^9.0.2"
+  },
+  "description": "Rankings management for FIRST Lego League tournaments",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bsimmons99/FLL-Rankings.git"
+  },
+  "author": "Bryce Simmons",
+  "bugs": {
+    "url": "https://github.com/bsimmons99/FLL-Rankings/issues"
+  },
+  "homepage": "https://github.com/bsimmons99/FLL-Rankings#readme"
+}
