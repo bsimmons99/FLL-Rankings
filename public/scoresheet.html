@@ -3,24 +3,27 @@
 
 <head>
   <title>CargoConnect Scorer</title>
-  <link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="stylesheet" href="/stylesheets/global.css">
+  <link rel="stylesheet" href="/stylesheets/scoresheet.css">
   <link rel="stylesheet" href="/stylesheets/modal.css">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+    rel="stylesheet">
 
   <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-  <script src="/javascripts/scorer.js" defer></script>
-  <script src="/javascripts/main.js" defer></script>
+  <script src="/javascripts/JsBarcode.all.min.js"></script>
+  <script src="/javascripts/scoresheet.js" type="module" defer></script>
 </head>
 
 <body hidden>
   <div id="app">
     <!-- Main Page -->
     <!-- Header -->
-    <header id="header">
-      <span class="status clickable" v-if="status.connectionStatus !== -1" v-bind:class="statusInfo.colour" v-on:click="showStatusInfo">{{ statusInfo.message }}</span>
+    <header id="header" class="sticky-header">
+      <span class="status clickable" v-if="status.connectionStatus !== -1" v-bind:class="statusInfo.colour"
+        v-on:click="showStatusInfo">{{ statusInfo.message }}</span>
       <span class="header-title">CargoConnect Scorer</span>
       <br>
       <span>Score: {{ score }}</span>
@@ -28,11 +31,11 @@
     <!-- Scoresheet -->
     <div id="scoresheet" class="scoresheet" v-if="challenges !== null">
       <div>
-        <label for="team-selection">Team:</label><select class="clickable" id="team-selection">
-          <option v-for="team in teams">{{ team.name }}</option>
+        <label for="team-selection">Team:</label><select class="clickable" id="team-selection" v-model="selectedTeam">
+          <option v-for="team in teams" v-bind:value="team.id">[{{ team.number }}] {{ team.name }}</option>
         </select>
-        <label for="round-selection">Round:</label><select class="clickable" id="round-selection">
-          <option v-for="round in rounds">{{ round.name }}</option>
+        <label for="round-selection">Round:</label><select class="clickable" id="round-selection" v-model="selectedRound">
+          <option v-for="round in rounds" v-bind:value="round.number">{{ round.name }}</option>
         </select>
         <br>
         <button v-on:click="clearScoresheet">Clear</button>
@@ -40,18 +43,29 @@
       </div>
 
       <div v-for="mission in challenges.missions" class="mission">
-        <span><span v-if="mission.mission" class="mission-id">{{ mission.mission }}</span> <span class="mission-description">{{ mission.description }}</span></span>
+        <span><span v-if="mission.mission" class="mission-id">{{ mission.mission }}</span> <span
+            class="mission-description">{{ mission.description }}</span></span>
         <div v-for="(quest, index) in mission.quests" class="quest">
           <div class="quest-description">{{ quest.description }}</div>
           <div v-if="quest.options.length > 0" class="options">
             <label class="clickable option" v-for="option in quest.options"
               v-bind:for="`radio_${mission.mission}_${index}_${option}`"
               v-bind:class="{'selected': (answers[quest.id] === option)}">
-              <input type="radio" v-bind:id="`radio_${mission.mission}_${index}_${option}`" v-bind:name="`radio_${mission.mission}_${index}`" v-model="answers[quest.id]" v-bind:value="option">
+              <input type="radio" v-bind:id="`radio_${mission.mission}_${index}_${option}`"
+                v-bind:name="`radio_${mission.mission}_${index}`" v-model="answers[quest.id]" v-bind:value="option">
               {{ option }}
             </label>
           </div>
         </div>
+      </div>
+      <!-- Submit Button -->
+      <div style="margin: auto">
+        <button type="button" v-on:click="submitScores">Submit</button>
+      </div>
+
+      <!-- Manual Data Relay Barcode -->
+      <div style="margin: auto">
+        <svg id="barcode"></svg>
       </div>
     </div>
     <!-- Modal -->
@@ -61,7 +75,8 @@
         <!-- <span v-on:click="hideModal" class="close clickable">&times;</span> -->
         <p v-html="modalData.content"></p>
         <button v-on:click="hideModal">Cancel</button>
-        <button v-show="modalData.actionButton.text" v-on:click="modalData.actionButton.action()">{{ modalData.actionButton.text }}</button>
+        <button v-show="modalData.actionButton.text" v-on:click="modalData.actionButton.action()">
+          {{ modalData.actionButton.text }}</button>
       </div>
     </div>
   </div>

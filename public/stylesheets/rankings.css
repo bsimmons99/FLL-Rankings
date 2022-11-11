@@ -1,0 +1,72 @@
+.rankings {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.rankings th, .rankings td {
+    border-color: white;
+    border-style: solid;
+}
+
+.team-list {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    height: 30em;
+}
+
+.team {
+    flex-grow: 0;
+    flex-shrink: 0;
+    max-width: 100%;
+
+    /* border: 1px solid black; */
+    margin: 0.1em;
+    display: flex;
+    justify-content: space-between;
+    font-size: 2em;
+}
+
+/* .team:nth-of-type(2n+1) { */
+.team {
+    background-color: #ddd;
+}
+
+.team.header {
+    font-weight: bold;
+    text-align: center;
+}
+
+.team-rank {
+    min-width: 2.3em;
+    text-align: center;
+}
+
+.team-name {
+    flex-basis: 60%;
+    flex-grow: 1;
+}
+
+.score {
+    /* margin: 0em 0em 0em 1em; */
+    /* flex-grow: 1; */
+    /* flex-basis: 33%; */
+    text-align: center;
+    /* border-left: 0.2em solid white; */
+    min-width: 4em;
+}
+
+.score.highest {
+    background-color: #ffc266;
+    font-weight: bold;
+}
+
+.banner {
+    height: 20%;
+}
+
+.trailer {
+    height: 20%;
+}

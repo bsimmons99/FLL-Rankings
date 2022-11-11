@@ -1,7 +1,6 @@
 body {
     /* padding: 50px; */
     margin: 0px;
-    font-family: 'Roboto', sans-serif;
 }
 
 header {
@@ -143,10 +142,6 @@ select, button {
     font-size: 1em;
 }
 
-[hidden] {
-    display: none;
-}
-
 @media screen and (max-width: 1100px) {
     body {
         padding: 0px;
@@ -156,8 +151,5 @@ select, button {
         width: 100%;
         border-style: hidden;
         padding: 0em;
-    }
-    .sticky-header+.scoresheet {
-        padding-top: 96px;
     }
 }

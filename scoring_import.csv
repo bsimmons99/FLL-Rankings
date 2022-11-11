@@ -1,0 +1,53 @@
+Version Number,1
+Block Format,1
+Number of Teams,9
+1,SEHS1,1,
+2,Trees,2,
+3,Turbo-Charged Tigers,3,
+4,Banks Bots,4,
+5,Code Blue,-,
+6,The Short Circuits,6,
+7,RoboRoos Sombreroos,7,
+8,Southern Vales LL Team,8,
+9,Static,9,
+Block Format,2
+Number of Ranking Matches,15
+Number of Tables,2
+Number of Teams per Table,2
+Number of Simultaneous Tables,0
+Table Names,Table-1,Table-2,
+6,10:40:00 AM,10:44:00 AM,8,5,
+7,10:52:00 AM,10:56:00 AM,4,2,
+8,11:04:00 AM,11:08:00 AM,6,9,
+9,11:16:00 AM,11:20:00 AM,7,3,
+10,11:28:00 AM,11:32:00 AM,1,,
+11,11:40:00 AM,11:44:00 AM,1,9,
+12,11:52:00 AM,11:56:00 AM,7,8,
+13,12:04:00 PM,12:08:00 PM,2,4,
+14,12:16:00 PM,12:20:00 PM,5,3,
+15,12:28:00 PM,12:32:00 PM,6,,
+16,13:10:00 PM,13:14:00 PM,4,6,
+17,13:24:00 PM,13:28:00 PM,2,5,
+18,13:38:00 PM,13:42:00 PM,1,8,
+19,13:52:00 PM,13:56:00 PM,9,7,
+20,14:06:00 PM,14:10:00 PM,3,,
+Block Format,3
+Number of Judged Events,1
+Number of Event Time Slots,3
+Number of Judging Teams,3
+Event Name,Judging
+Room Names,Room 1,Room 2,Room 3,
+1,09:45:00 AM,10:15:00 AM,9,2,8,
+2,10:35:00 AM,11:05:00 AM,7,1,3,
+3,11:25:00 AM,11:55:00 AM,5,6,4,
+Block Format,4
+Number of Practice Matches,5
+Number of Tables,1
+Number of Teams per Table,2
+Number of Simultaneous Tables,0
+Table Names,Table-1,Table-2,
+1,09:25:00 AM,09:29:00 AM,9,2,
+2,09:40:00 AM,09:44:00 AM,3,7,
+3,09:55:00 AM,09:59:00 AM,5,4,
+4,10:10:00 AM,10:14:00 AM,6,1,
+5,10:25:00 AM,10:29:00 AM,8,,
