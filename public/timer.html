@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Timer</title>
+  <link rel="stylesheet" href="/stylesheets/global.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;1,700&family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script src="/javascripts/timer.js" defer></script>
+</head>
+
+<body>
+  <div id="app">
+    <div>
+      <span style="font-family: 'Roboto Mono', monospace; font-size: 600%;">{{ clock }}</span>
+    </div>
+    <div>
+      <button type="button" onclick="timer_ctl('prime')">Prime</button>
+      <button type="button" onclick="timer_ctl('start')">Start</button>
+      <button type="button" onclick="timer_ctl('warn')">Warn</button>
+      <button type="button" onclick="timer_ctl('end')">End</button>
+      <button type="button" onclick="timer_ctl('abort')">Abort</button>
+    </div>
+  </div>
+</body>
+
+</html>

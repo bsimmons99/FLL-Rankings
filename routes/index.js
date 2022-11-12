@@ -72,4 +72,91 @@ router.get('/ranks', async function (req, res) {
     await conn.release();
 });
 
+
+let timer_queriers = [];
+router.get('/timer/query', async function (req, res) {
+    // await delay(2000);
+    // const commands = ['play', 'end', 'warn', 'abort'];
+    timer_queriers.push(res);
+    req.on('close', ()=>{
+        timer_queriers.splice(timer_queriers.indexOf(res))
+    });
+    // res.json(commands[Math.floor(Math.random()*commands.length)]);
+});
+
+const game_time = 150;
+// const game_time = 40;
+const warn_time = 30;
+let current_time = 0;
+let timer_id = null;
+
+let start_time = null;
+
+router.get('/timer/time', function (req, res) {
+    res.json(current_time);
+});
+
+router.post('/timer/control', async function (req, res) {
+    time_action(req.body.cmd);
+    res.end();
+});
+
+function run_timer() {
+    current_time -= 1;
+    if (current_time === warn_time) {
+        time_action('warn');
+    } 
+    else if (current_time === 0) {
+        time_action('end');
+    }
+}
+
+function time_action(action) {
+    switch (action) {
+        case 'prime':
+            if (timer_id) return;
+            current_time = game_time;
+            return;
+
+        case 'start':
+            if (timer_id) return;
+            time_action('prime');
+            timer_id = setInterval(run_timer, 1000);
+            break;
+
+        case 'warn':
+            if (!timer_id) return;
+            break;
+
+        case 'end':
+            if (!timer_id) return;
+            clearInterval(timer_id);
+            timer_id = null;
+            break;
+
+        case 'abort':
+            if (!timer_id) return;
+            clearInterval(timer_id);
+            timer_id = null;
+            time_action('prime');
+            break;
+
+        default:
+            return;
+    }
+    for (const res of timer_queriers) {
+        res.json(action);
+    }
+}
+
+// function delay(ms) {
+//     return new Promise((resolve) => {
+//         setTimeout(resolve, ms);
+//     });
+// }
+
+// setInterval(()=>{
+//     console.log(timer_queriers.length);
+// }, 1000);
+
 module.exports = router;
