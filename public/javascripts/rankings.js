@@ -1,7 +1,8 @@
 const app = new Vue({
     el: '#app',
     data: {
-        rankings: []
+        rankings: [],
+        lastUpdate: 0
     },
     computed: {
         rounds: function() {
@@ -21,7 +22,8 @@ let index = 0;
 fetch('/ranks?event=1').then(res => {
     return res.json()
 }).then(res => {
-    app.rankings = res;
+    app.rankings = res.ranks;
+    app.lastUpdate = res.lastUpdate;
 
     setInterval(() => {
         if (container.children.item((index+1)%container.children.length).getClientRects()[0]['y'] < container.getClientRects()[0]['y']) {
@@ -33,8 +35,10 @@ fetch('/ranks?event=1').then(res => {
     }, 75);
 });
 
-setInterval(()=>{
-fetch('/ranks?event=1').then(res => {return res.json()}).then(res => {
-app.rankings = res;
-});
-},5000);
+setInterval(async () => {
+    const res = await fetch(`/ranks?event=1&lastUpdate=${app.lastUpdate}`);
+    if (res.status !== 200) return;
+    const data = await res.json();
+    app.rankings = data.ranks;
+    app.lastUpdate = data.lastUpdate;
+}, 5000);

@@ -46,11 +46,19 @@ router.get('/ranks', async function (req, res) {
     const evt = req.query.event;
 
     const conn = await req.pool.getConnection();
-    const teams = await conn.query('SELECT team.id, team.number, team.name, team.affiliation, MAX(score.score) as highscore FROM team LEFT JOIN score ON score.team = team.id WHERE team.event = ? GROUP BY team.id ORDER BY highscore DESC, team.number ASC;', [evt]);
+
+    const lastUpdate = (await conn.query('SELECT MAX(update_time) as time FROM score WHERE event = ?;', [evt]))[0].time.getTime();
+    // const lastUpdateTime = lastUpdate[0].time.getTime();
+    if ('lastUpdate' in req.query && req.query.lastUpdate == lastUpdate) {
+        await conn.release();
+        res.sendStatus(304);
+        return;
+    }
+
+    const teams = await conn.query('SELECT team.id, team.number, team.name, team.affiliation, MAX(score.score) as highscore FROM team LEFT JOIN score ON score.team = team.id WHERE team.event = ? GROUP BY team.id ORDER BY team.number ASC;', [evt]);
 
     // console.log(teams);
     let ranks = [];
-    let rank = 1;
     for (const team of teams) {
         let team_scores = [];
         if (team.highscore !== null) {
@@ -62,15 +70,58 @@ router.get('/ranks', async function (req, res) {
         }
         ranks.push({
             highest: team.highscore,
-            rank: team.highscore ? rank++ : '-',
+            rank: '-',
             scores: team_scores,
+            scoresSorted: [...team_scores].sort((a, b)=>b-a),
             team: team
         });
     }
 
-    res.json(ranks);
+    if (ranks.length > 1) {
+        ranks.sort((a, b) => {
+            let sa = a.scoresSorted;
+            let sb = b.scoresSorted;
+            for (let i=0; i < Math.max(sa.length, sb.length); i++) {
+                if (i > sa.length) return 1;
+                if (i > sb.length) return -1;
+                if (sa[i] > sb[i]) return -1;
+                if (sa[i] < sb[i]) return 1;
+            }
+            return 0;
+        });
+
+        let rank = 1;
+        ranks[0].rank = rank++;
+        for (let i = 1; i < ranks.length; i++) {
+            // console.log(rank);
+            if (!ranks[i].highest) break;
+            // console.log(scores_equal(ranks[i-1], ranks[i]));
+            if (scores_equal(ranks[i-1], ranks[i])) {
+                ranks[i].rank = rank;
+            } else {
+                rank = i+1;
+                ranks[i].rank = rank;
+            }
+        }
+    }
+
+    // console.log('a', lastUpdate);
+    res.json({
+        'lastUpdate': lastUpdate,
+        'ranks': ranks
+    });
     await conn.release();
 });
+
+function scores_equal(a, b) {
+    let sa = a.scoresSorted;
+    let sb = b.scoresSorted;
+    // console.log(sa, sb);
+    for (let i=0; i < Math.max(sa.length, sb.length); i++) {
+        if (sa[i] !== sb[i]) return false;
+    }
+    return true;
+}
 
 
 let timer_queriers = [];
