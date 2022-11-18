@@ -1,3 +1,5 @@
+const name = "Super Powered";
+
 const challenges = {
     "missions": [
         {
@@ -355,4 +357,4 @@ function score(answers) {
     return points;
 }
 
-export { challenges, defaults, score };
+export { name, challenges, defaults, score };

@@ -32,3 +32,9 @@ fetch('/ranks?event=1').then(res => {
         container.scrollBy(0, 1);
     }, 75);
 });
+
+setInterval(()=>{
+fetch('/ranks?event=1').then(res => {return res.json()}).then(res => {
+app.rankings = res;
+});
+},5000);

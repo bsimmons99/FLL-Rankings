@@ -34,159 +34,160 @@ app.use('/', indexRouter);
 
 module.exports = app;
 
-function parseSchedule(data) {
-    // console.log('Running!');
-    // this.imported = data;
-    // console.table(data);
-    let imported = {};
-    let mode = -1;
-    let first = false;
-    let i = 0; //start at -1 to prevent skipping schedule version
-    while (++i < data.length) {
-        if (data[i][0] === 'Block Format') {
-            mode = data[i][1];
-            first = true;
-            continue;
-        }
-        switch (mode) {
-            case '1': //Team list
-                if (first) {
-                    imported.teams = {
-                        teamList: [],
-                        numTeams: parseInt(data[i][1])
-                    };
-                    i += 1; //Read 1 extra rows
-                }
-                imported.teams.teamList.push({
-                    number: data[i][0],
-                    name: data[i][1],
-                    affiliation: data[i][2],
-                    pit: data[i][3]
-                });
-                break;
+//Schedule Parsing and loading
+// function parseSchedule(data) {
+//     // console.log('Running!');
+//     // this.imported = data;
+//     // console.table(data);
+//     let imported = {};
+//     let mode = -1;
+//     let first = false;
+//     let i = 0; //start at -1 to prevent skipping schedule version
+//     while (++i < data.length) {
+//         if (data[i][0] === 'Block Format') {
+//             mode = data[i][1];
+//             first = true;
+//             continue;
+//         }
+//         switch (mode) {
+//             case '1': //Team list
+//                 if (first) {
+//                     imported.teams = {
+//                         teamList: [],
+//                         numTeams: parseInt(data[i][1])
+//                     };
+//                     i += 1; //Read 1 extra rows
+//                 }
+//                 imported.teams.teamList.push({
+//                     number: data[i][0],
+//                     name: data[i][1],
+//                     affiliation: data[i][2],
+//                     pit: data[i][3]
+//                 });
+//                 break;
 
-            case '2': //Ranked match schedule
-                if (first) {
-                    let _tableNames = [];
-                    for (let x = 1; x < parseInt(data[i + 1][1]) + 1; x++) {
-                        _tableNames.push(data[i + 4][x]);
-                    }
-                    imported.rankedMatches = {
-                        matchList: [],
-                        numMatches: parseInt(data[i + 0][1]),
-                        numSumultaneousTables: parseInt(data[i + 3][1]),
-                        numTeamsPerTable: parseInt(data[i + 2][1]),
-                        numTables: parseInt(data[i + 1][1]),
-                        tableNames: _tableNames
-                    };
-                    i += 5; //Read 5 extra rows
-                }
-                let _rankedTeams = [];
-                for (let x = 3; x < imported.rankedMatches.numTables + 3; x++) {
-                    _rankedTeams.push(data[i][x]);
-                }
+//             case '2': //Ranked match schedule
+//                 if (first) {
+//                     let _tableNames = [];
+//                     for (let x = 1; x < parseInt(data[i + 1][1]) + 1; x++) {
+//                         _tableNames.push(data[i + 4][x]);
+//                     }
+//                     imported.rankedMatches = {
+//                         matchList: [],
+//                         numMatches: parseInt(data[i + 0][1]),
+//                         numSumultaneousTables: parseInt(data[i + 3][1]),
+//                         numTeamsPerTable: parseInt(data[i + 2][1]),
+//                         numTables: parseInt(data[i + 1][1]),
+//                         tableNames: _tableNames
+//                     };
+//                     i += 5; //Read 5 extra rows
+//                 }
+//                 let _rankedTeams = [];
+//                 for (let x = 3; x < imported.rankedMatches.numTables + 3; x++) {
+//                     _rankedTeams.push(data[i][x]);
+//                 }
 
-                // console.log(data[i]);
-                imported.rankedMatches.matchList.push({
-                    number: parseInt(data[i][0]),
-                    // start: moment(data[i][1], 'HH:mm:ss A'),
-                    // end: moment(data[i][2], 'HH:mm:ss A'),
-                    start: Date.parse('1970-01-01T'+data[i][1].substr(0, 8)),
-                    end: Date.parse('1970-01-01T'+data[i][2].substr(0, 8)),
-                    teams: _rankedTeams
-                });
-                break;
+//                 // console.log(data[i]);
+//                 imported.rankedMatches.matchList.push({
+//                     number: parseInt(data[i][0]),
+//                     // start: moment(data[i][1], 'HH:mm:ss A'),
+//                     // end: moment(data[i][2], 'HH:mm:ss A'),
+//                     start: Date.parse('1970-01-01T'+data[i][1].substr(0, 8)),
+//                     end: Date.parse('1970-01-01T'+data[i][2].substr(0, 8)),
+//                     teams: _rankedTeams
+//                 });
+//                 break;
 
-            case '3': //Judging schedule
-                if (first) {
-                    let _roomNames = [];
-                    for (let x = 1; x < parseInt(data[i + 2][1]) + 1; x++) {
-                        _roomNames.push(data[i + 4][x]);
-                    }
-                    imported.judging = {
-                        sessionList: [],
-                        numSessions: parseInt(data[i + 1][1]),
-                        numRooms: parseInt(data[i + 2][1]),
-                        roomNames: _roomNames
-                    };
-                    i += 5; //Read 5 extra rows
-                }
-                let _judgingTeams = [];
-                for (let x = 3; x < imported.judging.numRooms + 3; x++) {
-                    _judgingTeams.push(data[i][x]);
-                }
+//             case '3': //Judging schedule
+//                 if (first) {
+//                     let _roomNames = [];
+//                     for (let x = 1; x < parseInt(data[i + 2][1]) + 1; x++) {
+//                         _roomNames.push(data[i + 4][x]);
+//                     }
+//                     imported.judging = {
+//                         sessionList: [],
+//                         numSessions: parseInt(data[i + 1][1]),
+//                         numRooms: parseInt(data[i + 2][1]),
+//                         roomNames: _roomNames
+//                     };
+//                     i += 5; //Read 5 extra rows
+//                 }
+//                 let _judgingTeams = [];
+//                 for (let x = 3; x < imported.judging.numRooms + 3; x++) {
+//                     _judgingTeams.push(data[i][x]);
+//                 }
 
-                imported.judging.sessionList.push({
-                    number: data[i][0],
-                    // start: moment(data[i][1], 'HH:mm:ss A'),
-                    // end: moment(data[i][2], 'HH:mm:ss A'),
-                    start: Date.parse('1970-01-01T'+data[i][1].substr(0, 8)),
-                    end: Date.parse('1970-01-01T'+data[i][2].substr(0, 8)),
-                    teams: _judgingTeams
-                });
-                break;
+//                 imported.judging.sessionList.push({
+//                     number: data[i][0],
+//                     // start: moment(data[i][1], 'HH:mm:ss A'),
+//                     // end: moment(data[i][2], 'HH:mm:ss A'),
+//                     start: Date.parse('1970-01-01T'+data[i][1].substr(0, 8)),
+//                     end: Date.parse('1970-01-01T'+data[i][2].substr(0, 8)),
+//                     teams: _judgingTeams
+//                 });
+//                 break;
 
-            case '4': //Practice match schedule
-                if (first) {
-                    let _tableNames = [];
-                    for (let x = 1; x < parseInt(data[i + 1][1]) + 1; x++) {
-                        _tableNames.push(data[i + 4][x]);
-                    }
-                    imported.practiceMatches = {
-                        matchList: [],
-                        numMatches: parseInt(data[i + 0][1]),
-                        numSumultaneousTables: parseInt(data[i + 3][1]),
-                        numTeamsPerTable: parseInt(data[i + 2][1]),
-                        numTables: parseInt(data[i + 1][1]),
-                        tableNames: _tableNames
-                    };
-                    i += 5; //Read 5 extra rows
-                }
-                let _practiceTeams = [];
-                for (let x = 3; x < imported.practiceMatches.numTables + 3; x++) {
-                    _practiceTeams.push(data[i][x]);
-                }
+//             case '4': //Practice match schedule
+//                 if (first) {
+//                     let _tableNames = [];
+//                     for (let x = 1; x < parseInt(data[i + 1][1]) + 1; x++) {
+//                         _tableNames.push(data[i + 4][x]);
+//                     }
+//                     imported.practiceMatches = {
+//                         matchList: [],
+//                         numMatches: parseInt(data[i + 0][1]),
+//                         numSumultaneousTables: parseInt(data[i + 3][1]),
+//                         numTeamsPerTable: parseInt(data[i + 2][1]),
+//                         numTables: parseInt(data[i + 1][1]),
+//                         tableNames: _tableNames
+//                     };
+//                     i += 5; //Read 5 extra rows
+//                 }
+//                 let _practiceTeams = [];
+//                 for (let x = 3; x < imported.practiceMatches.numTables + 3; x++) {
+//                     _practiceTeams.push(data[i][x]);
+//                 }
 
-                imported.practiceMatches.matchList.push({
-                    number: parseInt(data[i][0]),
-                    // start: moment(data[i][1], 'HH:mm:ss A'),
-                    // end: moment(data[i][2], 'HH:mm:ss A'),
-                    start: Date.parse('1970-01-01T'+data[i][1].substr(0, 8)),
-                    end: Date.parse('1970-01-01T'+data[i][2].substr(0, 8)),
-                    teams: _practiceTeams
-                });
-                break;
+//                 imported.practiceMatches.matchList.push({
+//                     number: parseInt(data[i][0]),
+//                     // start: moment(data[i][1], 'HH:mm:ss A'),
+//                     // end: moment(data[i][2], 'HH:mm:ss A'),
+//                     start: Date.parse('1970-01-01T'+data[i][1].substr(0, 8)),
+//                     end: Date.parse('1970-01-01T'+data[i][2].substr(0, 8)),
+//                     teams: _practiceTeams
+//                 });
+//                 break;
 
-            default:
-                console.log('Something went wrong...');
-                break;
-        }
-        first = false;
-    }
-    return imported;
-}
+//             default:
+//                 console.log('Something went wrong...');
+//                 break;
+//         }
+//         first = false;
+//     }
+//     return imported;
+// }
 
-function parseCSV(csvdata) {
-    let parsedata = [];
-    let newLinebrk = csvdata.split("\n");
-    for (let i = 0; i < newLinebrk.length; i++) {
+// function parseCSV(csvdata) {
+//     let parsedata = [];
+//     let newLinebrk = csvdata.split("\n");
+//     for (let i = 0; i < newLinebrk.length; i++) {
 
-        parsedata.push(newLinebrk[i].split(","))
-    }
-    return parsedata;
-}
+//         parsedata.push(newLinebrk[i].split(","))
+//     }
+//     return parsedata;
+// }
 
-async function initSchedule() {
-    const schedule = parseSchedule(parseCSV(await fs.readFile('/home/bryce/webapp/FLL-Rankings/scoring_import.csv', 'utf8')));
-    // console.log(schedule.teams);
+// async function initSchedule() {
+//     const schedule = parseSchedule(parseCSV(await fs.readFile('/home/bryce/webapp/FLL-Rankings/scoring_import.csv', 'utf8')));
+//     // console.log(schedule.teams);
 
-    const evtNum = 1;
-    let conn = await pool.getConnection();
-    await conn.beginTransaction();
-    for (const team of schedule.teams.teamList) {
-        await conn.query('INSERT INTO `team` (`event`, `number`, `name`, `affiliation`, `pit`) VALUES (?, ?, ?, ?, ?);', [4, team.number, team.name, team.affiliation, team.pit]);
-    }
-    await conn.commit();
-    await conn.release();
-}
+//     const evtNum = 1;
+//     let conn = await pool.getConnection();
+//     await conn.beginTransaction();
+//     for (const team of schedule.teams.teamList) {
+//         await conn.query('INSERT INTO `team` (`event`, `number`, `name`, `affiliation`, `pit`) VALUES (?, ?, ?, ?, ?);', [4, team.number, team.name, team.affiliation, team.pit]);
+//     }
+//     await conn.commit();
+//     await conn.release();
+// }
 // initSchedule();
