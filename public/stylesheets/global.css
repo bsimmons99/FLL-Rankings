@@ -2,6 +2,10 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
+.mono {
+    font-family: 'Roboto Mono', monospace;
+}
+
 [hidden] {
     display: none;
 }

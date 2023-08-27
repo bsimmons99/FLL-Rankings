@@ -1,7 +1,32 @@
+const timer = new Timer();
+
 const app = new Vue({
     el: '#app',
     data: {
-        clock: '00:00'
+        time: 0,
+        state: 'unknown',
+        muted: false,
+        color: sessionStorage.getItem('colour') ?? '#ffffff',
+        latency: 0,
+        connected: false,
+        show_controls: sessionStorage.getItem('show_controls') == 'true'
+    },
+    computed: {
+        clock: function() {
+            return timer.toClock(this.time);
+        }
+    },
+    watch: {
+        muted: function(value) {
+            start_audio.muted = value;
+            end_audio.muted = value;
+            warn_audio.muted = value;
+            abort_audio.muted = value;
+            sessionStorage.setItem('muted', value);
+        },
+        color: function(value) {
+            sessionStorage.setItem('colour', value);
+        }
     }
 });
 
@@ -9,69 +34,43 @@ const start_audio = new Audio('/sounds/start.mp3');
 const end_audio = new Audio('/sounds/end.mp3');
 const warn_audio = new Audio('/sounds/end-game.mp3');
 const abort_audio = new Audio('/sounds/stop.mp3');
-const music_audio = new Audio('/sounds/undertale.mp3');
 
-// music_audio.play();
+app.muted = sessionStorage.getItem('muted') == 'true'
+document.body.hidden = false;
 
-async function timer_ctl(cmd) {
-    await fetch('/timer/control', {
-        method: 'POST',
-        body: JSON.stringify({cmd:cmd}),
-        headers: {
-            'CONTENT-TYPE': 'application/json'
-        }
-    });
+timer.onLatency = (latency) => {
+    app.latency = latency;
 }
-
-let timer_id = null;
-async function audio_poll() {
-    while (true) {
-        try {
-            const command = await (await fetch('/timer/query')).json();
-            // console.log(command);
-            switch (command) {
-                case 'start':
-                    start_audio.play();
-                    if (timer_id) clearInterval(timer_id);
-                    timer_id = setInterval(timer_poll, 200);
-                    timer_poll();
-                    break;
-
-                case 'end':
-                    end_audio.play();
-                    clearInterval(timer_id);
-                    timer_id = null;
-                    timer_poll();
-                    break;
-
-                case 'abort':
-                    abort_audio.play();
-                    clearInterval(timer_id);
-                    timer_id = null;
-                    timer_poll();
-                    break;
-
-                case 'warn':
-                    warn_audio.play();
-                    break;
-
-                default:
-                    break;
-            }
-        } catch (error) {
-            await delay(2000);
-        }
-        await delay(100);
+timer.onUpdate = (update) => {
+    app.time = update.time;
+    app.state = update.state;
+}
+timer.onCommand = (command) => {
+    switch (command) {
+        case 'start':
+            start_audio.play();
+            break;
+        case 'endgame':
+            warn_audio.play();
+            break;
+        case 'finished':
+            end_audio.play();
+            break;
+        case 'abort':
+            abort_audio.play();
+            break;
+        default:
+            break;
     }
 }
-audio_poll();
+timer.initialise();
 
-async function timer_poll() {
-    app.clock = await (await fetch('/timer/time')).json();
+function timer_ctl(command) {
+    timer.sendCommand(command);
 }
 
-function delay(ms) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, ms);
-    });
+function keypress(evt) {
+    if (evt.code !== 'KeyQ' && evt.code !== 'KeyC') return;
+    app.show_controls = !app.show_controls;
+    sessionStorage.setItem('show_controls', app.show_controls);
 }

@@ -1,0 +1,41 @@
+#app {
+    height: 100%;
+    width: 100%;
+}
+
+html, body {
+    margin: 0px;
+    height: 100%;
+}
+
+.controls > button {
+    font-size: x-large;
+}
+
+.primed {
+    color: blue;
+}
+
+.running {
+    color: green;
+}
+
+.endgame {
+    color: orange;
+}
+
+.finished {
+    color: coral;
+}
+
+.aborted {
+    color: red;
+}
+
+.red {
+    color: red
+}
+
+.green {
+    color: green;
+}

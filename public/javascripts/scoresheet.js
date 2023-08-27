@@ -1,6 +1,8 @@
-import * as scorer from './test.mjs';
+import * as scorer from './scorer-2023.mjs';
 
 // console.log('ss', scorer.challenges);
+
+const timer = new Timer(false);
 
 const app = new Vue({
     el: '#app',
@@ -23,7 +25,8 @@ const app = new Vue({
         teams: [],
         rounds: [],
         selectedTeam: null,
-        selectedRound: null
+        selectedRound: null,
+        time: 0
     },
     computed: {
         score: function () {
@@ -42,6 +45,9 @@ const app = new Vue({
         },
         valid: function () {
             return this.selectedTeam && this.selectedRound && Object.keys(this.answers).length >= Object.keys(scorer.defaults).length;
+        },
+        clock: function () {
+            return timer.toClock(this.time);
         }
     },
     watch: {
@@ -130,6 +136,8 @@ const app = new Vue({
             });
             if (result.status == 200) {
                 app.answers={};
+                app.selectedTeam = null;
+                app.selectedRound = null;
             }
         }
     }
@@ -148,6 +156,11 @@ document.body.onload = async function () {
 
     // app.generateBarCode(app.answers);
 }
+
+timer.onUpdate = (update) => {
+    app.time = update.time;
+}
+timer.initialise();
 
 // function compressor(answers, o) {
 //     let c = 0;

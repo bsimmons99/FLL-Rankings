@@ -23,6 +23,13 @@ header {
     left: 0px;
 }
 
+.clock {
+    padding: 1px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
 .sticky-header {
     position: fixed;
     top: 0;

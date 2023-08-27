@@ -16,6 +16,7 @@
   <script src="/javascripts/vue.js"></script>
   <!-- <script src="/javascripts/JsBarcode.all.min.js"></script> -->
   <script src="/javascripts/scoresheet.js" type="module" defer></script>
+  <script src="/javascripts/timer-client.js"></script>
 </head>
 
 <body hidden>
@@ -26,19 +27,20 @@
       <span class="status clickable" v-if="status.connectionStatus !== -1" v-bind:class="statusInfo.colour"
         v-on:click="showStatusInfo">{{ statusInfo.message }}</span>
       <span class="header-title">{{ gameName }} Scorer</span>
+      <span class="clock">{{ clock }}</span>
+      <br>
+      <label for="team-selection">Team:</label> <select class="clickable" id="team-selection" v-model="selectedTeam">
+        <option v-for="team in teams" v-bind:value="team.id">[{{ team.number }}] {{ team.name }}</option>
+      </select>
+      <label for="round-selection">Round:</label> <select class="clickable" id="round-selection" v-model="selectedRound">
+        <option v-for="round in rounds" v-bind:value="round.number">{{ round.name }}</option>
+      </select>
       <br>
       <span>Score: {{ score }}</span>
     </header>
     <!-- Scoresheet -->
     <div id="scoresheet" class="scoresheet" v-if="challenges !== null">
       <div>
-        <label for="team-selection">Team:</label><select class="clickable" id="team-selection" v-model="selectedTeam">
-          <option v-for="team in teams" v-bind:value="team.id">[{{ team.number }}] {{ team.name }}</option>
-        </select>
-        <label for="round-selection">Round:</label><select class="clickable" id="round-selection" v-model="selectedRound">
-          <option v-for="round in rounds" v-bind:value="round.number">{{ round.name }}</option>
-        </select>
-        <br>
         <button v-on:click="clearScoresheet">Clear</button>
         <button v-on:click="defaultScoresheet">Defaults</button>
       </div>
@@ -72,8 +74,8 @@
       <!-- Manual Data Relay Barcode -->
       <!-- <div style="margin: auto">
         <svg id="barcode"></svg>
-      </div>
-    </div> -->
+      </div> -->
+    </div>
     <!-- Modal -->
     <div class="modal" v-show="modalData.active">
       <!-- Modal content -->

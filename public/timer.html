@@ -4,27 +4,43 @@
 <head>
   <title>Timer</title>
   <link rel="stylesheet" href="/stylesheets/global.css">
+  <link rel="stylesheet" href="/stylesheets/timer.css">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;1,700&family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script src="/javascripts/vue.js"></script>
+  <script src="/javascripts/timer-client.js"></script>
   <script src="/javascripts/timer.js" defer></script>
 </head>
 
-<body>
-  <div id="app">
-    <div>
-      <span style="font-family: 'Roboto Mono', monospace; font-size: 600%;">{{ clock }}</span>
+<body onkeypress="keypress(event)" hidden>
+  <div id="app" :style="'background-color:'+color">
+    <div style="display: flex; align-items: center; justify-content: center;">
+      <span :class="state" style="font-size: 600%;">{{ clock }}</span>
+      <div class="mono" v-show="show_controls">
+        <span class="mono">State: <span :class="state">{{ state }}</span></span><br>
+        <span class="mono">Latency: <span :class="latency < 50 ? 'green' : 'red'">{{ latency }}ms</span></span><br>
+        <span class="mono">Connected: <span :class="connected ? 'green' : 'red'">{{ connected }}</span></span>
+      </div>
     </div>
-    <div>
-      <button type="button" onclick="timer_ctl('prime')">Prime</button>
-      <button type="button" onclick="timer_ctl('start')">Start</button>
-      <button type="button" onclick="timer_ctl('warn')">Warn</button>
-      <button type="button" onclick="timer_ctl('end')">End</button>
-      <button type="button" onclick="timer_ctl('abort')">Abort</button>
+    <div style="text-align: center;" v-show="show_controls">
+      <span class="controls">
+        <button type="button" onclick="timer_ctl('prime')" :disabled="state == 'running' || state == 'endgame' || state == 'primed'">Prime</button>
+        <button type="button" onclick="timer_ctl('start')" :disabled="state == 'running' || state == 'endgame'">Start</button>
+        <button type="button" onclick="timer_ctl('abort')" :disabled="state != 'running' && state != 'endgame'">Abort</button>
+      </span>
+      <br><br>
+      <input id="mute-input" type="checkbox" v-model="muted"><label for="mute-input">Mute</label><br>
+      <input id="color-input" list="colour-options" type="color" v-model="color"> <label for="color-input">Color</label>
     </div>
   </div>
+  <datalist id="colour-options">
+    <option value="#ff00ff"></option>
+    <option value="#ffffff"></option>
+    <option value="#00ff00"></option>
+    <option value="#474747"></option>
+  </datalist>
 </body>
 
 </html>
