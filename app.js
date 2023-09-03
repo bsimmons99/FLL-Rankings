@@ -10,6 +10,15 @@ const indexRouter = require('./routes/index');
 
 const app = express();
 
+{
+    const env_keys = ['DB_HOST', 'DB_USER', 'DB_PASS', 'DB_DB'];
+    const env_ok = env_keys.every(i => process.env.hasOwnProperty(i));
+    if (!env_ok) {
+        console.error('Missing one or more environment variables:', env_keys);
+        process.exit(1);
+    }
+}
+
 const pool = mariadb.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
