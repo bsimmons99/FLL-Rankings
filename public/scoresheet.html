@@ -27,7 +27,7 @@
       <span class="status clickable" v-if="status.connectionStatus !== -1" v-bind:class="statusInfo.colour"
         v-on:click="showStatusInfo">{{ statusInfo.message }}</span>
       <span class="header-title">{{ gameName }} Scorer</span>
-      <span class="clock">{{ clock }}</span>
+      <span class="clock">Game: {{ clock }}</span>
       <br>
       <label for="team-selection">Team:</label> <select class="clickable" id="team-selection" v-model="selectedTeam">
         <option v-for="team in teams" v-bind:value="team.id">[{{ team.number }}] {{ team.name }}</option>
