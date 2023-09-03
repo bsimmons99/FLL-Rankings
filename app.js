@@ -4,7 +4,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mariadb = require('mariadb');
 // const debug = require('debug')('fll-rankings:app');
-const fs = require('fs/promises');
+// const fs = require('fs/promises');
 
 const indexRouter = require('./routes/index');
 
