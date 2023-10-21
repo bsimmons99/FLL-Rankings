@@ -145,6 +145,10 @@ header {
     /* pointer-events: none; */
 }
 
+button:disabled {
+    cursor: default;
+}
+
 select, button {
     font-size: 1em;
 }

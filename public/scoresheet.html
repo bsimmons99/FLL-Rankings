@@ -66,8 +66,8 @@
         <button type="button" v-on:click="submitScores" v-bind:disabled="!valid">Submit</button>
       </div>
       <div style="margin: auto; text-align: center; color: #de0000" v-show="Object.keys(answers).length">
-        <p style="margin: 8px" v-show="!selectedTeam">Missing Team</p>
-        <p style="margin: 8px" v-show="!selectedRound">Missing Round</p>
+        <p style="margin: 8px" v-show="selectedTeam === null">Missing Team</p>
+        <p style="margin: 8px" v-show="selectedRound === null">Missing Round</p>
         <p style="margin: 8px" v-show="Object.keys(answers).length < Object.keys(defaults).length">Missing Some Missions</p>
       </div>
 

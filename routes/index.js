@@ -27,17 +27,65 @@ router.get('/rounds', function (req, res) {
     ]);
 });
 
-router.post('/submit_score', async function (req, res) {
-    // console.log(req.body);
+router.get('/all_scores', async function (req, res) {
+    if (!check_valid(req.query, ['event'])) {
+        return res.sendStatus(400);
+    }
+    res.json(await req.pool.query('SELECT * FROM score WHERE score.event = ?;', [req.query.event]));
+});
 
-    if (!('team' in req.body && 'round' in req.body && 'answers' in req.body) ||
-         (req.body.team === null || req.body.round === null || req.body.answers === null)) {
+router.get('/single_score', async function (req, res) {
+    if (!check_valid(req.query, ['id'])) {
         return res.sendStatus(400);
     }
 
-    await req.pool.query('INSERT INTO score (event, team, round, user, result, score) VALUE (?, ?, ?, ?, ?, ?);', [1, req.body.team, req.body.round, null, req.body.answers, scorer.score(req.body.answers)]);
+    const score = await req.pool.query('SELECT team, user, round, result AS answers FROM score WHERE id = ?;', [req.query.id]);
 
-    res.sendStatus(200);
+    if (score.length !== 1) {
+        return res.sendStatus(404);
+    }
+
+    res.json(score[0]);
+});
+
+router.post('/submit_score', async function (req, res) {
+    if (!check_valid(req.body, ['team', 'round', 'answers', 'event'])) {
+        return res.sendStatus(400);
+    }
+
+    await req.pool.query('INSERT INTO score (event, team, round, user, result, score) VALUE (?, ?, ?, ?, ?, ?);', [req.body.event, req.body.team, req.body.round, null, req.body.answers, scorer.score(req.body.answers)]);
+
+    res.sendStatus(204);
+});
+
+router.post('/change_score', async function (req, res) {
+    if (!check_valid(req.body, ['id', 'round', 'team', 'answers'])) {
+        return res.sendStatus(400);
+    }
+
+    await req.pool.query('UPDATE score SET team=?, round=?, user=?, result=?, score=?, update_time=NOW() WHERE score.id = ?;', [req.body.team, req.body.round, req.body.user, req.body.answers, scorer.score(req.body.answers), req.body.id]);
+
+    res.sendStatus(204);
+});
+
+router.post('/rescore_event', async function (req, res) {
+    if (!check_valid(req.body, ['event'])) {
+        return res.sendStatus(400);
+    }
+
+    const conn = await req.pool.getConnection();
+    conn.beginTransaction();
+
+    const rows = await conn.query('SELECT * FROM score WHERE score.event = ?', [req.body.event]);
+    
+    for (const row of rows) {
+        await conn.query('UPDATE score SET score=?, update_time=NOW() WHERE id = ?;', [scorer.score(row.result), row.id]);
+    }
+
+    conn.commit();
+    conn.release();
+
+    res.sendStatus(204);
 });
 
 let lut = 0;
@@ -56,8 +104,16 @@ router.get('/ranks', async function (req, res) {
         return;
     }
 
+    // Get event details
+    const event_params = (await conn.query('SELECT * FROM event WHERE id = ?;', [evt]))[0];
+    if (!event_params) {
+        return res.sendStatus(404);
+    }
+    const round_offset_low = event_params.stage ? event_params.rounds_practice : 0;
+    const round_offset_high = event_params.stage ? round_offset_low + event_params.rounds_ranked : event_params.rounds_practice;
+
     // Get list of all teams and their highest score
-    const teams = await conn.query('SELECT team.id, team.number, team.name, team.affiliation, MAX(score.score) as highscore FROM team LEFT JOIN (SELECT * FROM score WHERE score.event = ?) as score ON score.team = team.id WHERE team.event = ? GROUP BY team.id ORDER BY team.number ASC;', [evt, evt]);
+    const teams = await conn.query('SELECT team.id, team.number, team.name, team.affiliation, MAX(score.score) as highscore FROM team LEFT JOIN (SELECT * FROM score WHERE score.event = ? AND score.round >= ? AND score.round < ?) as score ON score.team = team.id WHERE team.event = ? GROUP BY team.id ORDER BY team.number ASC;', [evt, round_offset_low, round_offset_high, evt]);
 
     let ranks = [];
     for (const team of teams) {
@@ -65,10 +121,10 @@ router.get('/ranks', async function (req, res) {
         // If they have a high score (have a played a match)
         if (team.highscore !== null) {
             // Get all the scores of this team...
-            const score_query = await conn.query('SELECT score, round FROM score WHERE score.event = ? AND score.team = ? ORDER BY score.round ASC;', [evt, team.id]);
+            const score_query = await conn.query('SELECT score, round FROM score WHERE score.event = ? AND score.team = ? AND score.round >= ? AND score.round < ? ORDER BY score.round ASC;', [evt, team.id, round_offset_low, round_offset_high]);
             // ...And add them to an array
             for (const score of score_query) {
-                team_scores[score.round-1] = score.score;
+                team_scores[score.round - round_offset_low] = score.score;
             }
         }
         // Add this team's scores to the list of all rankings
@@ -134,6 +190,15 @@ function scores_equal(a, b) {
     // console.log(sa, sb);
     for (let i=0; i < Math.max(sa.length, sb.length); i++) {
         if (sa[i] !== sb[i]) return false;
+    }
+    return true;
+}
+
+function check_valid(object, keys) {
+    for (const key of keys) {
+        if (!(key in object) || object[key] === null) {
+            return false;
+        }
     }
     return true;
 }

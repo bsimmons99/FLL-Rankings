@@ -2,7 +2,13 @@ import * as scorer from './scorer-2023.mjs';
 
 // console.log('ss', scorer.challenges);
 
+const urlParams = new URLSearchParams(window.location.search);
+const edit_existing_id = urlParams.get('edit');
+// console.log('edit', edit_existing_id);
+
 const timer = new Timer(false);
+
+const event_id = 1;
 
 const app = new Vue({
     el: '#app',
@@ -24,6 +30,7 @@ const app = new Vue({
         defaults: scorer.defaults,
         teams: [],
         rounds: [],
+        user: null,
         selectedTeam: null,
         selectedRound: null,
         time: 0
@@ -44,7 +51,7 @@ const app = new Vue({
             }
         },
         valid: function () {
-            return this.selectedTeam && this.selectedRound && Object.keys(this.answers).length >= Object.keys(scorer.defaults).length;
+            return this.selectedTeam !== null && this.selectedRound !== null && Object.keys(this.answers).length >= Object.keys(scorer.defaults).length;
         },
         clock: function () {
             return timer.toClock(this.time);
@@ -123,18 +130,25 @@ const app = new Vue({
                 return;
             }
             console.log(this.answers);
-            let result = await fetch('/submit_score', {
+            const destination = edit_existing_id ? '/change_score' : '/submit_score';
+            const result = await fetch(destination, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
+                    id: edit_existing_id,
+                    user: this.user,
                     team: this.selectedTeam,
                     round: this.selectedRound,
-                    answers: this.answers
+                    answers: this.answers,
+                    event: event_id
                 })
             });
-            if (result.status == 200) {
+            if (result.status === 204) {
+                if (edit_existing_id) {
+                    window.location.replace('/score-admin');
+                }
                 app.answers={};
                 app.selectedTeam = null;
                 app.selectedRound = null;
@@ -151,8 +165,15 @@ document.body.onload = async function () {
     const header = document.getElementById('header');
     document.getElementById('scoresheet').style.marginTop = header.offsetHeight + 'px';
 
-    app.teams = await (await fetch('/teams?event=1')).json();
+    app.teams = await (await fetch(`/teams?event=${event_id}`)).json();
     app.rounds = await (await fetch('/rounds')).json();
+    if (edit_existing_id) {
+        const to_edit = await (await fetch(`/single_score?id=${edit_existing_id}`)).json();
+        console.log(to_edit);
+        app.selectedTeam = to_edit.team;
+        app.selectedRound = to_edit.round;
+        app.answers = to_edit.answers;
+    }
 
     // app.generateBarCode(app.answers);
 }

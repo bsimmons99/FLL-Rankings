@@ -19,7 +19,7 @@ let container = document.getElementById('team_list');
 let index = 0;
 
 // fetch('https://live.roboroos.org.au/FLL/rankings.json').then(res => {
-fetch('/ranks?event=1').then(res => {
+fetch('/ranks?event=2').then(res => {
     return res.json();
 }).then(res => {
     app.rankings = res.ranks;
@@ -42,7 +42,7 @@ setInterval(async () => {
     }
     console.log('Fetching!');
     fetching = true;
-    const res = await fetch(`/ranks?event=1&lastUpdate=${app.lastUpdate}`);
+    const res = await fetch(`/ranks?event=2&lastUpdate=${app.lastUpdate}`);
     if (res.status !== 200) return;
     const data = await res.json();
     app.rankings = data.ranks;

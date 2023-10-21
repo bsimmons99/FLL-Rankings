@@ -17,6 +17,11 @@ const timer = require('../timerctl');
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
+if (process.env.node_env === 'production') {
+    debug('Running in production mode');
+    app.set('trust proxy', 'loopback');
+}
+
 /**
  * Create HTTP server.
  */
