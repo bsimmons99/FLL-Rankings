@@ -163,22 +163,24 @@ router.get('/ranks', async function (req, res) {
             return 0;
         });
 
-        // Assign rank numbers to the teams
-        let rank = 1;
-        ranks[0].rank = rank;
-        for (let i = 1; i < ranks.length; i++) {
-            // If this team has no hiscore, this and none of the following teams have played yet
-            // Leave all their ranks as the default '-' by breaking out of the loop
-            if (!ranks[i].highest) break;
-            // If this teams score is the same as the previous team, they share the same rank number
-            if (scores_equal(ranks[i-1], ranks[i])) {
-                ranks[i].rank = rank;
-            } else {
-                // If 2 teams are tied, rank number should skip over the tied teams eg ranks: 1,2,2,4,5
-                // This ties a teams rank to their place in the array, not the previous rank number
-                // We also save the rank number in case the next team are tied with this one
-                rank = i+1;
-                ranks[i].rank = rank;
+        // Assign rank numbers to the teams if any teams have a rank
+        if (ranks[0].highest !== null) {
+            let rank = 1;
+            ranks[0].rank = rank;
+            for (let i = 1; i < ranks.length; i++) {
+                // If this team has no hiscore, this and none of the following teams have played yet
+                // Leave all their ranks as the default '-' by breaking out of the loop
+                if (!ranks[i].highest) break;
+                // If this teams score is the same as the previous team, they share the same rank number
+                if (scores_equal(ranks[i-1], ranks[i])) {
+                    ranks[i].rank = rank;
+                } else {
+                    // If 2 teams are tied, rank number should skip over the tied teams eg ranks: 1,2,2,4,5
+                    // This ties a teams rank to their place in the array, not the previous rank number
+                    // We also save the rank number in case the next team are tied with this one
+                    rank = i+1;
+                    ranks[i].rank = rank;
+                }
             }
         }
     }
