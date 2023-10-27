@@ -8,7 +8,7 @@ const edit_existing_id = urlParams.get('edit');
 
 const timer = new Timer(false);
 
-const event_id = 1;
+const event_id = 2;
 
 const app = new Vue({
     el: '#app',

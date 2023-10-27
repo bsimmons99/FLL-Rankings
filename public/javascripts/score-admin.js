@@ -1,4 +1,4 @@
-const event_id = 1;
+const event_id = 2;
 
 const app = new Vue({
     el: '#app',
