@@ -90,6 +90,12 @@ router.post('/rescore_event', async function (req, res) {
 
 let lut = 0;
 router.get('/ranks', async function (req, res) {
+    // Set Headers
+    const origin = req.get('origin');
+    if (check_value(origin, ['https://live.roboroos.org.au'])) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+
     if (!('event' in req.query)) return res.sendStatus(400);
     const evt = req.query.event;
 
@@ -201,6 +207,15 @@ function check_valid(object, keys) {
         }
     }
     return true;
+}
+
+function check_value(str, opts) {
+    for (const opt of opts) {
+        if (opt === str) {
+            return true;
+        }
+    }
+    return false;
 }
 
 module.exports = router;
