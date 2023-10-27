@@ -25,14 +25,15 @@ fetch('/ranks?event=2').then(res => {
     app.rankings = res.ranks;
     app.lastUpdate = res.lastUpdate;
 
-    // setInterval(() => {
-    //     if (container.children.item((index+1)%container.children.length).getClientRects()[0]['y'] < container.getClientRects()[0]['y']) {
-    //         container.children.item((index)%container.children.length).style.order = index + 1;
-    //         index++;
-    //     }
+    setInterval(() => {
+        if (container.children.item((index+1)%container.children.length).getClientRects()[0]['y'] < container.getClientRects()[0]['y']) {
+            container.children.item((index)%container.children.length).style.order = index + 1;
+            index++;
+        }
     
-    //     container.scrollBy(0, 1);
-    // }, 75);
+        container.scrollBy(0, 1);
+        // container.children.item(0).style.marginTop -= 1;
+    }, 75);
 });
 let fetching = false;
 setInterval(async () => {

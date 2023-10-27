@@ -14,8 +14,9 @@
     flex-direction: column;
     overflow-y: hidden;
     scroll-behavior: smooth;
-    /*height: 30em;*/
-    /*height: 90vh;*/
+    /* height: 30em; */
+    /* height: 90vh; */
+    height: calc(100vh - 75px);
 }
 
 .team {
