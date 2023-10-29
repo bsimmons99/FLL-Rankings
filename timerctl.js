@@ -2,8 +2,9 @@ const websockets = require('ws');
 const debug = require('debug')('fll-rankings:timer');
 const betterIntervals = require('./betterintervals');
 const fs = require('fs');
+const mariadb = require('mariadb');
 
-
+const this_event = 2;
 const save_file = 'timer-save.txt';
 
 const game_time = 150;
@@ -17,6 +18,14 @@ let start_time = 0;
 let current_time = game_time;
 let current_state = 'primed';
 let timer_id = null;
+
+const pool = mariadb.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    connectionLimit: 2,
+    database: process.env.DB_DB
+});
 
 fs.readFile(save_file, null, (err, data) => {
     if (err) {
@@ -145,6 +154,7 @@ function startTimerAt(time_left, restarted) {
             clearTimer();
             sendCommand('finished');
             updateTimerCache(0);
+            incrementRound();
         }
         sendUpdate();
     }, 1000);
@@ -155,6 +165,10 @@ function startTimerAt(time_left, restarted) {
     if (!restarted) {
         updateTimerCache(start_time);
     }
+}
+
+async function incrementRound() {
+    await pool.query('UPDATE event SET current_round = current_round + 1 WHERE event.id = ?;', [this_event]);
 }
 
 function clearTimer() {

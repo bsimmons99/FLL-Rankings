@@ -12,9 +12,18 @@ let scorer;
 
 // const challenges = require('../challenges/2022-superpowered.json');
 
+router.use(function (req, res, next) {
+    // Set CORS Headers
+    const origin = req.get('origin');
+    if (check_value(origin, ['https://live.roboroos.org.au'])) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    next();
+});
+
 router.get('/teams', async function (req, res) {
     // res.json(schedule.teams.teamList);
-    if (!('event' in req.query)) return res.sendStatus(400);
+    if (!check_valid(req.query, ['event'])) return res.sendStatus(400);
     res.json(await req.pool.query('SELECT id, number, name, affiliation FROM team WHERE team.event = ? ORDER BY team.number ASC;', [req.query.event]));
 });
 
@@ -25,6 +34,17 @@ router.get('/rounds', function (req, res) {
         { name: 'Ranking 2', number: 2 },
         { name: 'Ranking 3', number: 3 }
     ]);
+});
+
+router.get('/current_round', async function (req, res) {
+    if (!check_valid(req.query, ['event'])) return res.sendStatus(400);
+    res.json((await req.pool.query('SELECT current_round AS round FROM event WHERE event.id = ?;', [req.query.event]))[0]);
+});
+
+router.post('/update_round', async function (req, res) {
+    if (!check_valid(req.body, ['event', 'round'])) return res.sendStatus(400);
+    await req.pool.query('UPDATE event SET current_round = ? WHERE event.id = ?;', [req.body.round, req.body.event]);
+    res.sendStatus(204);
 });
 
 router.get('/all_scores', async function (req, res) {
@@ -98,12 +118,6 @@ router.post('/rescore_event', async function (req, res) {
 
 let lut = 0;
 router.get('/ranks', async function (req, res) {
-    // Set Headers
-    const origin = req.get('origin');
-    if (check_value(origin, ['https://live.roboroos.org.au'])) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-    }
-
     if (!('event' in req.query)) return res.sendStatus(400);
     const evt = req.query.event;
 

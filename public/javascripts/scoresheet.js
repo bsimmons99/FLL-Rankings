@@ -22,7 +22,7 @@ const app = new Vue({
             content: ''
         },
         status: {
-            connectionStatus: 0
+            connectionStatus: 2
         },
         challenges: scorer.challenges,
         gameName: scorer.name,
