@@ -77,8 +77,8 @@ class Timer {
             console.log('WEBSOCKET CLOSED');
             setTimeout(()=>{
                 console.log('Retrying');
-                openSocket();
-            }, 2000);
+                this.#openSocket();
+            }, 5000);
         }
     }
 }
