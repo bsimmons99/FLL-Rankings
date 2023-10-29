@@ -18,9 +18,10 @@
 
 <body hidden>
   <div id="app">
+    <button @click="rescore_event">Rescore Event</button>
     <div class="container">
       <div v-for="score in scores" class="score" :hidden="conflicts_only && !score.conflicts">
-        <span>ID: {{ score.id }} <a :href="'/scoresheet?edit='+score.id">edit</a></span><br>
+        <span>ID: {{ score.id }} <a :href="'/scoresheet?edit='+score.id">edit</a> <button @click="delete_score(score.id)">Delete</button></span><br>
         <span>Team: {{ findTeam(score.team).name }}</span><br>
         <span>Round: {{ score.round }}</span><br>
         <span>Score: {{ score.score }}</span><br>

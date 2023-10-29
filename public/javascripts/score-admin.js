@@ -30,6 +30,36 @@ const app = new Vue({
             }
             console.error('Could not find team:', id);
             return {'id': -1, 'number': -1, 'name': '', 'affiliation': null};
+        },
+        delete_score: async function (id) {
+            if (!confirm(`Are you sure you wish to delete ID: ${id}`)) {
+                return;
+            }
+            const result = await fetch('/delete_score', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: id
+                })
+            });
+            await load();
+        },
+        rescore_event: async function() {
+            if (!confirm('Are you sure you wish to rescore the event?')) {
+                return;
+            }
+            const result = await fetch('/rescore_event', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    event: event_id
+                })
+            });
+            await load();
         }
     }
 });
@@ -37,7 +67,8 @@ const app = new Vue({
 //Prevent FOUC
 document.body.hidden = false;
 
-document.body.onload = async function () {
+
+async function load() {
     app.teams = await (await fetch(`/teams?event=${event_id}`)).json();
     app.rounds = await (await fetch('/rounds')).json();
     const scores = await (await fetch(`/all_scores?event=${event_id}`)).json();
@@ -48,7 +79,23 @@ document.body.onload = async function () {
     }
     markDuplicates(scores);
     app.scores = scores;
+}
+
+document.body.onload = async function () {
+    await load();
 };
+
+let fetching = false;
+setInterval(async () => {
+    if (fetching) {
+        console.warn('Previous fetch is taking longer than expected. Skipping this fetch');
+        return;
+    }
+    console.log('Fetching!');
+    fetching = true;
+    await load();
+    fetching = false;
+}, 5000);
 
 function markDuplicates(scores) {
     let r = 0;

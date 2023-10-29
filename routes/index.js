@@ -48,6 +48,14 @@ router.get('/single_score', async function (req, res) {
     res.json(score[0]);
 });
 
+router.delete('/delete_score', async function (req, res) {
+    if (!check_valid(req.body, ['id'])) {
+        return res.sendStatus(400);
+    }
+    await req.pool.query('DELETE FROM score WHERE score.id=?;', [req.body.id]);
+    res.sendStatus(204);
+});
+
 router.post('/submit_score', async function (req, res) {
     if (!check_valid(req.body, ['team', 'round', 'answers', 'event'])) {
         return res.sendStatus(400);
