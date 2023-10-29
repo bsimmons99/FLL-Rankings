@@ -46,28 +46,38 @@ function updateTimerCache(time) {
     });
 }
 
+let wsid = 0;
+
 function initialise(server) {
     wss = new websockets.WebSocketServer({server});    
 
     wss.on('connection', (ws) => {
+        let id = wsid++;
         ws.on('error', (err) => {
-            console.error(err);
+            debug('WS Error:', id, err);
         });
         
-        // debug('Socket Opened');
+        debug('Socket Opened', id);
         ws.send(JSON.stringify(generateUpdate()));
-        wsockets.push(ws);
+        wsockets.push({ws:ws, open:true, lastPong:0});
 
         // Latency measurements
         ws['latency'] = 0;
         ws.send(JSON.stringify({type: 'latency-ping', value: Date.now()}));
         setInterval(()=>{
-            ws.send(JSON.stringify({type: 'latency-ping', value: Date.now()}));
+            const timeNow = Date.now();
+            // Check we have had a pong recently
+            if (wsockets[id].lastPong !== 0 && timeNow - wsockets[id].lastPong > 30000) {
+                // Close the socket, but warn for now
+                debug('Warning! Socket has timed out!', id);
+            }
+            ws.send(JSON.stringify({type: 'latency-ping', value: timeNow}));
         }, 10000);
     
         ws.on('close', ()=>{
-            // debug('Socket Closed');
-            wsockets.splice(wsockets.indexOf(ws)); 
+            debug('Socket Closed', id);
+            wsockets[id].open = false;
+            wsockets[id].ws = null;
         });
 
         ws.on('message', (data) => {
@@ -93,7 +103,9 @@ function initialise(server) {
                     ws.send(JSON.stringify({type: 'latency-pong', value: message.value}));
                     break;
                 case 'latency-pong':
-                    ws['latency'] = (Date.now() - message.value) / 2;
+                    const timeNow = Date.now();
+                    ws['latency'] = (timeNow - message.value) / 2;
+                    wsockets.lastPong = timeNow;
                     break;
                 default:
                     break;
@@ -167,7 +179,8 @@ function sendCommand(command) {
         value: command
     });
     for (const socket of wsockets) {
-        socket.send(cmd_string);
+        if (!socket.open) continue;
+        socket.ws.send(cmd_string);
     }
 }
 
@@ -186,7 +199,8 @@ function sendUpdate() {
     // debug(update);
     const update_string = JSON.stringify(update);
     for (const socket of wsockets) {
-        socket.send(update_string);
+        if (!socket.open) continue;
+        socket.ws.send(update_string);
     }
 }
 
