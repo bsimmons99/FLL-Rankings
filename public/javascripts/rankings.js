@@ -35,6 +35,7 @@ fetch('/ranks?event=2').then(res => {
         // container.children.item(0).style.marginTop -= 1;
     }, 75);
 });
+
 let fetching = false;
 setInterval(async () => {
     if (fetching) {

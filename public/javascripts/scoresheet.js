@@ -149,7 +149,7 @@ const app = new Vue({
                 if (edit_existing_id) {
                     window.location.replace('/score-admin');
                 }
-                app.answers={};
+                app.answers = {};
                 app.selectedTeam = null;
                 app.selectedRound = null;
             }
