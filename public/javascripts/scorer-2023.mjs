@@ -230,7 +230,7 @@ const challenges = {
             "quests": [
                 {
                     "id": "x1",
-                    "description": "1x Boat and Camera, 7x Audience Members, 5x Experts, 6x Precision Tokens, 4x Coach Pins, 8x Season Tiles",
+                    "description": "7x Audience Members, 5x Experts, 6x Precision Tokens, 1x Pedestal",
                     "options": []
                 }
             ]
@@ -297,7 +297,7 @@ function score(answers) {
     if (answers['m03a'] === 'Yes') points += 20;
 
     if (answers['m04a'] === 'Yes') points += 10;
-    if (answers['m04b'] === 'Yes') points += 20;
+    if (answers['m04a'] === 'Yes' && answers['m04b'] === 'Yes') points += 20;
 
     if (answers['m05a'] === 'Yes') points += 30;
 
