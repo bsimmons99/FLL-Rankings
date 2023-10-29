@@ -8,6 +8,13 @@ html, body {
     height: 100%;
 }
 
+.clock {
+    background-color: #ffffff;
+    text-align: center;
+    width: 220px;
+    border-radius: 20px;
+}
+
 .controls > button {
     font-size: x-large;
 }
