@@ -163,7 +163,9 @@ document.body.hidden = false;
 document.body.onload = async function () {
     //Manage header sticky for scrolling
     const header = document.getElementById('header');
-    document.getElementById('scoresheet').style.marginTop = header.offsetHeight + 'px';
+    setTimeout(()=>{
+        document.getElementById('scoresheet').style.marginTop = header.offsetHeight +10+ 'px';
+    }, 100);
 
     app.teams = await (await fetch(`/teams?event=${event_id}`)).json();
     app.rounds = await (await fetch('/rounds')).json();
