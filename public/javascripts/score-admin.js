@@ -54,10 +54,7 @@ const app = new Vue({
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    event: event_id
-                })
+                }
             });
             await load();
         }
@@ -69,9 +66,9 @@ document.body.hidden = false;
 
 
 async function load() {
-    app.teams = await (await fetch(`/teams?event=${event_id}`)).json();
+    app.teams = await (await fetch('/teams')).json();
     app.rounds = await (await fetch('/rounds')).json();
-    const scores = await (await fetch(`/all_scores?event=${event_id}`)).json();
+    const scores = await (await fetch('/all_scores')).json();
 
     for (const score of scores) {
         score.submit_time = new Date(score.submit_time);
@@ -91,7 +88,7 @@ setInterval(async () => {
         console.warn('Previous fetch is taking longer than expected. Skipping this fetch');
         return;
     }
-    console.log('Fetching!');
+    // console.log('Fetching!');
     fetching = true;
     await load();
     fetching = false;
@@ -122,5 +119,5 @@ function markDuplicates(scores) {
         //     scores[conflict_id.index].conflicts = score.conflicts;
         // }
     }
-    console.log(r);
+    // console.log(r);
 }

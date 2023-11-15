@@ -8,8 +8,6 @@ const edit_existing_id = urlParams.get('edit');
 
 const timer = new Timer(false);
 
-const event_id = 2;
-
 const app = new Vue({
     el: '#app',
     data: {
@@ -141,8 +139,7 @@ const app = new Vue({
                     user: this.user,
                     team: this.selectedTeam,
                     round: this.selectedRound,
-                    answers: this.answers,
-                    event: event_id
+                    answers: this.answers
                 })
             });
             if (result.status === 204) {
@@ -167,7 +164,7 @@ document.body.onload = async function () {
         document.getElementById('scoresheet').style.marginTop = header.offsetHeight +10+ 'px';
     }, 100);
 
-    app.teams = await (await fetch(`/teams?event=${event_id}`)).json();
+    app.teams = await (await fetch('/teams')).json();
     app.rounds = await (await fetch('/rounds')).json();
     if (edit_existing_id) {
         const to_edit = await (await fetch(`/single_score?id=${edit_existing_id}`)).json();

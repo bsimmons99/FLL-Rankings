@@ -23,8 +23,8 @@ router.use(function (req, res, next) {
 
 router.get('/teams', async function (req, res) {
     // res.json(schedule.teams.teamList);
-    if (!check_valid(req.query, ['event'])) return res.sendStatus(400);
-    res.json(await req.pool.query('SELECT id, number, name, affiliation FROM team WHERE team.event = ? ORDER BY team.number ASC;', [req.query.event]));
+    // if (!check_valid(req.query, ['event'])) return res.sendStatus(400);
+    res.json(await req.pool.query('SELECT id, number, name, affiliation FROM team WHERE team.event = ? ORDER BY team.number ASC;', [req.query.event ?? default_event]));
 });
 
 router.get('/rounds', function (req, res) {
@@ -37,21 +37,21 @@ router.get('/rounds', function (req, res) {
 });
 
 router.get('/current_round', async function (req, res) {
-    if (!check_valid(req.query, ['event'])) return res.sendStatus(400);
-    res.json((await req.pool.query('SELECT current_round AS round FROM event WHERE event.id = ?;', [req.query.event]))[0]);
+    // if (!check_valid(req.query, ['event'])) return res.sendStatus(400);
+    res.json((await req.pool.query('SELECT current_round AS round FROM event WHERE event.id = ?;', [req.query.event ?? default_event]))[0]);
 });
 
 router.post('/update_round', async function (req, res) {
-    if (!check_valid(req.body, ['event', 'round'])) return res.sendStatus(400);
-    await req.pool.query('UPDATE event SET current_round = ? WHERE event.id = ?;', [req.body.round, req.body.event]);
+    if (!check_valid(req.body, ['round'])) return res.sendStatus(400);
+    await req.pool.query('UPDATE event SET current_round = ? WHERE event.id = ?;', [req.body.round, req.body.event ?? default_event]);
     res.sendStatus(204);
 });
 
 router.get('/all_scores', async function (req, res) {
-    if (!check_valid(req.query, ['event'])) {
-        return res.sendStatus(400);
-    }
-    res.json(await req.pool.query('SELECT * FROM score WHERE score.event = ?;', [req.query.event]));
+    // if (!check_valid(req.query, ['event'])) {
+    //     return res.sendStatus(400);
+    // }
+    res.json(await req.pool.query('SELECT * FROM score WHERE score.event = ?;', [req.query.event ?? default_event]));
 });
 
 router.get('/single_score', async function (req, res) {
@@ -77,11 +77,11 @@ router.delete('/delete_score', async function (req, res) {
 });
 
 router.post('/submit_score', async function (req, res) {
-    if (!check_valid(req.body, ['team', 'round', 'answers', 'event'])) {
+    if (!check_valid(req.body, ['team', 'round', 'answers'])) {
         return res.sendStatus(400);
     }
 
-    await req.pool.query('INSERT INTO score (event, team, round, user, result, score) VALUE (?, ?, ?, ?, ?, ?);', [req.body.event, req.body.team, req.body.round, null, req.body.answers, scorer.score(req.body.answers)]);
+    await req.pool.query('INSERT INTO score (event, team, round, user, result, score) VALUE (?, ?, ?, ?, ?, ?);', [req.body.event ?? default_event, req.body.team, req.body.round, null, req.body.answers, scorer.score(req.body.answers)]);
 
     res.sendStatus(204);
 });
@@ -97,14 +97,14 @@ router.post('/change_score', async function (req, res) {
 });
 
 router.post('/rescore_event', async function (req, res) {
-    if (!check_valid(req.body, ['event'])) {
-        return res.sendStatus(400);
-    }
+    // if (!check_valid(req.body, ['event'])) {
+    //     return res.sendStatus(400);
+    // }
 
     const conn = await req.pool.getConnection();
     conn.beginTransaction();
 
-    const rows = await conn.query('SELECT * FROM score WHERE score.event = ?', [req.body.event]);
+    const rows = await conn.query('SELECT * FROM score WHERE score.event = ?', [req.body.event ?? default_event]);
     
     for (const row of rows) {
         await conn.query('UPDATE score SET score=?, update_time=NOW() WHERE id = ?;', [scorer.score(row.result), row.id]);
@@ -118,8 +118,8 @@ router.post('/rescore_event', async function (req, res) {
 
 let lut = 0;
 router.get('/ranks', async function (req, res) {
-    if (!('event' in req.query)) return res.sendStatus(400);
-    const evt = req.query.event;
+    // if (!('event' in req.query)) return res.sendStatus(400);
+    const evt = req.query.event ?? default_event;
 
     const conn = await req.pool.getConnection();
 
