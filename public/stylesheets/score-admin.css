@@ -1,11 +1,12 @@
-.container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+.container table, .container td, .container tr, .container th {
+    border-collapse: collapse;
+    border: 1px black solid;
 }
 
-.score {
-    border: 1px salmon solid;
-    margin: 1em;
-    padding: 0.5em;
+.container td, .container th {
+    padding: 0.2em;
+}
+
+.conflict {
+    background-color: salmon;
 }

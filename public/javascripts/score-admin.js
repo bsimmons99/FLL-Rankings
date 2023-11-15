@@ -1,12 +1,13 @@
-const event_id = 2;
-
 const app = new Vue({
     el: '#app',
     data: {
         scores: [],
         teams: [],
         rounds: [],
-        conflicts_only: false
+        options: {
+            show_date: false,
+            conflicts_only: false
+        }
     },
     computed: {
         filtered_scores: function() {
@@ -30,6 +31,26 @@ const app = new Vue({
             }
             console.error('Could not find team:', id);
             return {'id': -1, 'number': -1, 'name': '', 'affiliation': null};
+        },
+        formatTime: function (time) {
+            if (this.options.show_date) {
+                return time.toLocaleString();
+            } else {
+                return time.toLocaleTimeString();
+            }
+        },
+        compareDate: function (d1, d2) {
+            if (d1 < d2) {
+                return -1;
+            } else if (d1 > d2) {
+                return 1;
+            } else {
+                return 0;
+            }
+        },
+        edit_score: function (id) {
+            // :href="'/scoresheet?edit='+score.id"
+            window.location.href = `/scoresheet?edit=${id}`;
         },
         delete_score: async function (id) {
             if (!confirm(`Are you sure you wish to delete ID: ${id}`)) {

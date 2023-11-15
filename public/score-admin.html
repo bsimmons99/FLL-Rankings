@@ -19,17 +19,41 @@
 <body hidden>
   <div id="app">
     <button @click="rescore_event">Rescore Event</button>
+    <label><input type="checkbox" v-model="options.conflicts_only"> Conflicts</label>
+    <label><input type="checkbox" v-model="options.show_date"> Date</label>
     <div class="container">
-      <div v-for="score in scores" class="score" :hidden="conflicts_only && !score.conflicts">
-        <span>ID: {{ score.id }} <a :href="'/scoresheet?edit='+score.id">edit</a> <button @click="delete_score(score.id)">Delete</button></span><br>
-        <span>Team: {{ findTeam(score.team).name }}</span><br>
-        <span>Round: {{ score.round }}</span><br>
-        <span>Score: {{ score.score }}</span><br>
-        <span>User: {{ score.user }}</span><br>
-        <span>Submitted: {{ score.submit_time.toLocaleString() }}</span><br>
-        <span>Updated: {{ score.update_time.toLocaleString() }}</span><br>
-        <span>Conflicts: {{ score.conflicts }}</span><br>
-      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Rnd</th>
+            <th>Score</th>
+            <th>Team</th>
+            <!-- <th>User</th> -->
+            <th>Submitted</th>
+            <th>Updated</th>
+            <th>Conflicts</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="score in scores" :class="{'conflict':score.conflicts.length}" :hidden="options.conflicts_only && !score.conflicts.length">
+            <td>{{ score.id }}</td>
+            <td>{{ score.round }}</td>
+            <td>{{ score.score }}</td>
+            <td>{{ findTeam(score.team).name }}</td>
+            <!-- <td>{{ score.user }}</td> -->
+            <td>{{ formatTime(score.submit_time) }}</td>
+            <td>{{ formatTime(score.update_time) }}</td>
+            <td>
+              <span v-for="conflict in score.conflicts">
+                {{ conflict.id }}
+              </span>
+            </td>
+            <td><button @click="edit_score(score.id)">Edit</button><button @click="delete_score(score.id)">Delete</button></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </body>
