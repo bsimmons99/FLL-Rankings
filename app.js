@@ -190,13 +190,13 @@ function parseCSV(csvdata) {
 
 async function initSchedule() {
     const schedule = parseSchedule(parseCSV(await fs.readFile('/home/bryce/FLL-Rankings/scoring_import.csv', 'utf8')));
-    // console.log(schedule.teams);
+    console.log(schedule.teams);
 
-    const evtNum = 2;
-    let conn = await pool.getConnection();
+    const evtNum = 3;
+    const conn = await pool.getConnection();
     await conn.beginTransaction();
     for (const team of schedule.teams.teamList) {
-        await conn.query('INSERT INTO `team` (`event`, `number`, `name`, `affiliation`, `pit`) VALUES (?, ?, ?, ?, ?);', [evtNum, team.number, team.name, team.affiliation, team.pit]);
+        await conn.query('INSERT INTO `team` (`event`, `number`, `name`, `affiliation`, `pit`) VALUES (?, ?, ?, ?, ?);', [evtNum, team.number, team.name, team.affiliation.length ? team.affiliation : null, team.pit.length ? team.pit : null]);
     }
     await conn.commit();
     await conn.release();
