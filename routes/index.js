@@ -4,6 +4,9 @@ const router = express.Router();
 const debug = require('debug')('fll-rankings:index');
 const debug_req = require('debug')('fll-rankings:index-request');
 const timer = require('../timerctl');
+const fs = require('fs/promises');
+
+const default_event = 3;
 
 let scorer;
 (async () => {
@@ -19,6 +22,20 @@ router.use(function (req, res, next) {
         res.setHeader('Access-Control-Allow-Origin', origin);
     }
     next();
+});
+
+router.get('/scoring_import.csv', async function (req, res, next) {
+    try {
+        const data = await fs.readFile('scoring_import.csv', 'utf8');
+        res.send(data);
+    } catch (error) {
+        res.sendStatus(500);
+    }
+});
+
+router.get('/timer_running', async function (req, res, next) {
+    const cached_start_time = await req.pool.query('SELECT timer_start_cache FROM event WHERE id = ?;', [req.query.event ?? default_event]);
+    res.json(cached_start_time[0].timer_start_cache.valueOf() !== 0);
 });
 
 router.get('/teams', async function (req, res) {
@@ -107,7 +124,7 @@ router.post('/rescore_event', async function (req, res) {
     const rows = await conn.query('SELECT * FROM score WHERE score.event = ?', [req.body.event ?? default_event]);
     
     for (const row of rows) {
-        await conn.query('UPDATE score SET score=?, update_time=NOW() WHERE id = ?;', [scorer.score(row.result), row.id]);
+        await conn.query('UPDATE score SET score=? WHERE id = ?;', [scorer.score(row.result), row.id]);
     }
 
     conn.commit();

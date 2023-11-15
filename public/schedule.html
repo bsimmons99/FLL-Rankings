@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+
+    <title>FLL Tournament Schedule</title>
+    <link rel="stylesheet" href="/stylesheets/schedule.css">
+    <script src="/javascripts/schedule.js" defer></script>
+</head>
+
+<body>
+    <div id="app" hidden>
+        <div v-if="showScheduleInput">
+            <input id="scheduleInput" type="file" onchange="scheduleInputChange(this)">
+        </div>
+        <div v-if="imported">
+            <div>
+                <label for="myTeamInput">Team name/number:</label> <input list="teamList" id="myTeamInput" v-model="myTeam" type="search"><br>
+                <datalist id="teamList">
+                    <option v-for="team in imported.teams.teamList" v-bind:value="team.name">
+                </datalist>
+                <input id="showTablesCheck" v-model="showTables" type="checkbox"><label for="showTablesCheck">Show tables</label>
+            </div>
+            <hr>
+            <div>
+                <div class="practice schedule">
+                    <h2>Practice</h2>
+                    <table>
+                        <tr>
+                            <th>Number</th>
+                            <th v-if="showMatchStartTime">Start</th>
+                            <th v-if="showMatchEndTime">End</th>
+                            <th v-show="!showTables">Team</th><th v-show="!showTables">Team</th>
+                            <th v-show="showTables" v-for="tableName in imported.rankedMatches.tableNames">{{ tableName }}</th>
+                        </tr>
+                        <tr v-for="match in imported.practiceMatches.matchList" v-bind:class="{ currentMatch: match.number === currentMatch, matchActive: timerRunning }">
+                            <td>{{ match.number }}</td>
+                            <td v-if="showMatchStartTime">{{ match.start.format(timeFormat) }}</td>
+                            <td v-if="showMatchEndTime">{{ match.end.format(timeFormat) }}</td>
+                            <td v-for="teamNumber in match.teams" v-show="teamNumber || showTables" class="teamCell" v-bind:class="{highlight : teamNumber && (myTeam === teamNumber || myTeam.toLowerCase() === nameFromNumber(teamNumber).toLowerCase())}">
+                                <span v-if="teamNumber">#{{ teamNumber }} - {{ nameFromNumber(teamNumber) }}</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="ranked schedule">
+                    <h2>Ranked</h2>
+                    <table>
+                        <tr>
+                            <th>Number</th>
+                            <th v-if="showMatchStartTime">Start</th>
+                            <th v-if="showMatchEndTime">End</th>
+                            <th v-show="!showTables">Team</th><th v-show="!showTables">Team</th>
+                            <th v-show="showTables" v-for="tableName in imported.rankedMatches.tableNames">{{ tableName }}</th>
+                        </tr>
+                        <tr v-for="match in imported.rankedMatches.matchList" v-bind:class="{ currentMatch: match.number === currentMatch, matchActive: timerRunning }">
+                            <td>{{ match.number }}</td>
+                            <td v-if="showMatchStartTime">{{ match.start.format(timeFormat) }}</td>
+                            <td v-if="showMatchEndTime">{{ match.end.format(timeFormat) }}</td>
+                            <td v-for="teamNumber in match.teams" v-show="teamNumber || showTables" class="teamCell" v-bind:class="{highlight : teamNumber && (myTeam === teamNumber || myTeam.toLowerCase() === nameFromNumber(teamNumber).toLowerCase())}">
+                                <span v-if="teamNumber">#{{ teamNumber }} - {{ nameFromNumber(teamNumber) }}</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="judging">
+                    <h2>Judging</h2>
+                    <table>
+                        <tr>
+                            <th>Number</th>
+                            <th v-if="showJudgeStartTime">Start</th>
+                            <th v-if="showJudgeEndTime">End</th>
+                            <th v-for="roomName in imported.judging.roomNames">{{ roomName }}</th>
+                        </tr>
+                        <tr v-for="session in imported.judging.sessionList">
+                            <td>{{ session.number }}</td>
+                            <td v-if="showJudgeStartTime">{{ session.start.format(timeFormat) }}</td>
+                            <td v-if="showJudgeEndTime">{{ session.end.format(timeFormat) }}</td>
+                            <td v-for="teamNumber in session.teams" class="teamCell" v-bind:class="{highlight : teamNumber && (myTeam === teamNumber || myTeam.toLowerCase() === nameFromNumber(teamNumber).toLowerCase())}">
+                                <span>#{{ teamNumber }} - {{ nameFromNumber(teamNumber) }}</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div v-else>
+            <span>Loading Schedule...</span>
+        </div>
+    </div>
+</body>
+
+</html>

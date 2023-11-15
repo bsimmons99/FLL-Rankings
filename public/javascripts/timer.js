@@ -4,6 +4,7 @@ const app = new Vue({
     el: '#app',
     data: {
         time: 0,
+        round: -1,
         state: 'unknown',
         muted: false,
         color: localStorage.getItem('colour') ?? '#ffffff',
@@ -59,6 +60,7 @@ timer.onCommand = (command) => {
             break;
         case 'finished':
             end_audio.play();
+            update_round();
             break;
         case 'abort':
             abort_audio.play();
@@ -79,3 +81,12 @@ function keypress(evt) {
     app.show_controls = !app.show_controls;
     localStorage.setItem('show_controls', app.show_controls);
 }
+
+async function update_round() {
+    const round = await (await fetch('/current_round')).json()
+    app.round = round.round;
+}
+
+(async () => {
+    update_round();
+})();

@@ -20,6 +20,7 @@
       <span :class="state" class="clock" style="font-size: 600%;">{{ clock }}</span>
       <div class="mono" v-show="show_controls">
         <span class="mono">State: <span :class="state">{{ state }}</span></span><br>
+        <span class="mono">Match: <span>{{ round }}</span></span><br>
         <span class="mono">Latency: <span :class="latency < 50 ? 'green' : 'red'">{{ latency }}ms</span></span><br>
         <span class="mono">Connected: <span :class="connected ? 'green' : 'red'">{{ connected }}</span></span>
       </div>

@@ -1,0 +1,69 @@
+body {
+    font-family: 'Roboto', sans-serif;
+}
+/* table, th, td {
+    border: 1px solid black;
+} */
+table {
+    /* border-collapse: collapse; */
+    text-align: center;
+    /* font-size: 1.25em; */
+}
+table span {
+    padding: 10px;
+}
+.highlight {
+    background-color: yellow;
+    border: 1px solid black;
+    border-style: dashed;
+}
+/* .tr:nth-of-type(2n+1) {
+    background-color: #dddddd;
+} */
+.practice tr:nth-of-type(2n+1) {
+    background-color: #00ff0050;
+}
+.practice tr:nth-of-type(2n) {
+    background-color: #00ff0005;
+}
+.ranked tr:nth-of-type(2n+1) {
+    background-color: #ff000050;
+    /* transition: background-color 1s; */
+}
+.ranked tr:nth-of-type(2n) {
+    background-color: #ff000010;
+    /* transition: background-color 1s; */
+}
+.judging tr:nth-of-type(2n+1) {
+    background-color: #0000ff50;
+}
+.judging tr:nth-of-type(2n) {
+    background-color: #0000ff10;
+}
+.schedule tr.currentMatch {
+    background-color: #9100ff8f;
+    transition: background-color 0.5s 0.125s;
+}
+.schedule tr {
+    transition: background-color 0.5s 0s;
+}
+.teamCell {
+    text-align: left;
+}
+
+.currentMatch.matchActive {
+    background-image:
+        repeating-linear-gradient(-45deg,
+            transparent,
+            transparent 1rem,
+            #ffffff70 1rem,
+            #ffffff70 2rem);
+    background-size: 200% 200%;
+    animation: barberpole 30s linear infinite reverse;
+}
+
+@keyframes barberpole {
+    100% {
+        background-position: 100% 100%;
+    }
+}
