@@ -1,11 +1,9 @@
 const websockets = require('ws');
 const debug = require('debug')('fll-rankings:timer');
 const betterIntervals = require('./betterintervals');
-const fs = require('fs');
 const mariadb = require('mariadb');
 
-const this_event = 2;
-const save_file = 'timer-save.txt';
+const this_event = 3;
 
 const game_time = 150;
 const warn_time = 30;
@@ -27,32 +25,37 @@ const pool = mariadb.createPool({
     database: process.env.DB_DB
 });
 
-fs.readFile(save_file, null, (err, data) => {
-    if (err) {
-        debug('Error Reading File:', err);
-        return;
-    }
 
-    const started = Number.parseInt(data);
+async function bootTimer() {
+    // This has the odd effect of, if the `started` time is in the future, it boots the timer
+    // such that it will end `game_time` after the `started` time. Left in as feature
+    const started = await readTimerCache();
 
     // Nothing running
     if (started === 0) return;
 
-    const diff = Math.floor((Date.now() - started)/1000);
-    debug(diff);
+    const diff = Math.floor((Date.now() - started*1000)/1000);
+    // debug('diff', diff);
 
     // Past end of game
-    if (diff > game_time) return;
+    if (diff > game_time) {
+        // Clear the cache
+        updateTimerCache(0);
+        return;
+    };
 
     startTimerAt(game_time - diff, true);
-});
+}
+bootTimer();
 
-function updateTimerCache(time) {
-    fs.writeFile(save_file, time.toString(), (err) => {
-        if (err) {
-            debug('Error Saving File:', err);
-        }
-    });
+async function readTimerCache() {
+    const cached_time = await pool.query('SELECT timer_start_cache FROM event WHERE id = ?;', [this_event]);
+    // console.log('tsc', cached_time[0].timer_start_cache)
+    return cached_time[0].timer_start_cache;
+}
+
+async function updateTimerCache(time) {
+    await pool.query('UPDATE event SET timer_start_cache = ? WHERE id = ?;', [Math.floor(time/1000), this_event]);
 }
 
 let wsid = 0;
@@ -153,7 +156,6 @@ function startTimerAt(time_left, restarted) {
             current_state = 'finished';
             clearTimer();
             sendCommand('finished');
-            updateTimerCache(0);
             incrementRound();
         }
         sendUpdate();
@@ -172,6 +174,7 @@ async function incrementRound() {
 }
 
 function clearTimer() {
+    updateTimerCache(0);
     betterIntervals.clearBetterInterval(timer_id);
     timer_id = null;
 }
