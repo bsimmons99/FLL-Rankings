@@ -41,7 +41,7 @@
             <td>{{ score.id }}</td>
             <td>{{ score.round }}</td>
             <td>{{ score.score }}</td>
-            <td>{{ findTeam(score.team).name }}</td>
+            <td>[{{ findTeam(score.team).number }}] {{ findTeam(score.team).name }}</td>
             <!-- <td>{{ score.user }}</td> -->
             <td>{{ formatTime(score.submit_time) }}</td>
             <td>{{ formatTime(score.update_time) }}</td>
