@@ -163,13 +163,15 @@ router.get('/ranks', async function (req, res) {
     let ranks = [];
     for (const team of teams) {
         let team_scores = [];
+        let team_gpas = [];
         // If they have a high score (have a played a match)
         if (team.highscore !== null) {
             // Get all the scores of this team...
-            const score_query = await conn.query('SELECT score, round FROM score WHERE score.event = ? AND score.team = ? AND score.round >= ? AND score.round < ? ORDER BY score.round ASC;', [evt, team.id, round_offset_low, round_offset_high]);
+            const score_query = await conn.query('SELECT score, round, result FROM score WHERE score.event = ? AND score.team = ? AND score.round >= ? AND score.round < ? ORDER BY score.round ASC;', [evt, team.id, round_offset_low, round_offset_high]);
             // ...And add them to an array
             for (const score of score_query) {
                 team_scores[score.round - round_offset_low] = score.score;
+                team_gpas[score.round - round_offset_low] = score.result['gpa'];
             }
         }
         // Add this team's scores to the list of all rankings
@@ -179,6 +181,7 @@ router.get('/ranks', async function (req, res) {
             rank: '-',
             scores: team_scores,
             scoresSorted: [...team_scores].sort((a, b)=>b-a),
+            gpas: req.query['gpaxj'] !== undefined ? team_gpas : [],
             team: team
         });
     }
