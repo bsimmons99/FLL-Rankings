@@ -4,7 +4,7 @@ const challenges = {
     "missions": [
         {
             "mission": "EIB",
-            "description": "Equiptment Inspection Bonus",
+            "description": "Equipment Inspection Bonus",
             "quests": [
                 {
                     "id": "eib",
