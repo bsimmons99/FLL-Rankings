@@ -1,4 +1,4 @@
-import * as scorer from './scorer-2023.mjs';
+import * as scorer from './scorer-2024.mjs';
 
 // console.log('ss', scorer.challenges);
 
