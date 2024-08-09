@@ -49,7 +49,14 @@ router.get('/rounds', function (req, res) {
         { name: 'Practice 1', number: 0 },
         { name: 'Ranking 1', number: 1 },
         { name: 'Ranking 2', number: 2 },
-        { name: 'Ranking 3', number: 3 }
+        { name: 'Ranking 3', number: 3 }//,
+        // { name: 'Ranking 4', number: 4 },
+        // { name: 'Ranking 5', number: 5 },
+        // { name: 'Ranking 6', number: 6 },
+        // { name: 'Ranking 7', number: 7 },
+        // { name: 'Ranking 8', number: 8 },
+        // { name: 'Ranking 9', number: 9 },
+        // { name: 'Ranking 10', number: 10 }
     ]);
 });
 
