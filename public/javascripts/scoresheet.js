@@ -32,7 +32,7 @@ const app = new Vue({
         selectedTeam: null,
         selectedRound: null,
         time: 0,
-        public: true
+        public: false
     },
     computed: {
         score: function () {

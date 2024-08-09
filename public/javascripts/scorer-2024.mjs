@@ -270,7 +270,7 @@ const challenges = {
             "quests": [
                 {
                     "id": "x1",
-                    "description": "7x Audience Members, 5x Experts, 6x Precision Tokens, 1x Pedestal",
+                    "description": "1x Coral Tree, 1x Shark, 3x Reef Segments, 1x SCUBA Diver, 1x Treasure Chest, 1x Unknown Creature, 5x Krill, 3x Samples (Water, Seabed, Plankton), 2x Trident Parts, 1x Research Vessel, 6x Precision Tokens",
                     "options": []
                 }
             ]
