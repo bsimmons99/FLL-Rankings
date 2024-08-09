@@ -24,18 +24,18 @@
     <!-- Main Page -->
     <!-- Header -->
     <header id="header" class="sticky-header">
-      <span class="status clickable" v-if="status.connectionStatus !== -1" v-bind:class="statusInfo.colour"
+      <span class="status clickable" v-if="!public && status.connectionStatus !== -1" v-bind:class="statusInfo.colour"
         v-on:click="showStatusInfo">{{ statusInfo.message }}</span>
       <span class="header-title">{{ gameName }} Scorer</span>
-      <span class="clock">Game: {{ clock }}</span>
-      <br>
-      <label for="team-selection">Team:</label> <select class="clickable" id="team-selection" v-model="selectedTeam">
-        <option v-for="team in teams" v-bind:value="team.id">[{{ team.number }}] {{ team.name }}</option>
-      </select>
-      <label for="round-selection">Round:</label> <select class="clickable" id="round-selection" v-model="selectedRound">
-        <option v-for="round in rounds" v-bind:value="round.number">{{ round.name }}</option>
-      </select>
-      <br>
+      <span v-if="!public" class="clock">Game: {{ clock }}</span>
+      <div v-if="!public">
+        <label for="team-selection">Team:</label> <select class="clickable" id="team-selection" v-model="selectedTeam">
+          <option v-for="team in teams" v-bind:value="team.id">[{{ team.number }}] {{ team.name }}</option>
+        </select>
+        <label for="round-selection">Round:</label> <select class="clickable" id="round-selection" v-model="selectedRound">
+          <option v-for="round in rounds" v-bind:value="round.number">{{ round.name }}</option>
+        </select>
+      </div>
       <span>Score: {{ score }}</span>
     </header>
     <!-- Scoresheet -->
@@ -63,9 +63,9 @@
       </div>
       <!-- Submit Button -->
       <div style="margin: auto">
-        <button type="button" v-on:click="submitScores" v-bind:disabled="!valid">Submit</button>
+        <button v-if="!public" type="button" v-on:click="submitScores" v-bind:disabled="!valid">Submit</button>
       </div>
-      <div style="margin: auto; text-align: center; color: #de0000" v-show="Object.keys(answers).length">
+      <div style="margin: auto; text-align: center; color: #de0000" v-show="!public && Object.keys(answers).length">
         <p style="margin: 8px" v-show="selectedTeam === null">Missing Team</p>
         <p style="margin: 8px" v-show="selectedRound === null">Missing Round</p>
         <p style="margin: 8px" v-show="Object.keys(answers).length < Object.keys(defaults).length">Missing Some Missions</p>
