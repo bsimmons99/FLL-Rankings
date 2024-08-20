@@ -331,7 +331,7 @@ function score(answers) {
     if (answers['m01c'] === 'Yes') points += 20;
 
     if (answers['m02a'] === 'Yes') points += 20;
-    if (answers['m02c'] === 'Yes') points += 10;
+    if (answers['m02b'] === 'Yes') points += 10;
 
     if (answers['m03a'] === 'Yes') points += 20;
          if (answers['m03b'] === '1') points += 5;
