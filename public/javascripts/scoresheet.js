@@ -17,6 +17,7 @@ const app = new Vue({
                 text: '',
                 action: function () { }
             },
+            title: '',
             content: ''
         },
         status: {
@@ -68,22 +69,32 @@ const app = new Vue({
         hideModal: function () {
             this.modalData.active = false;
         },
-        showModal: function (message, confirmMessage, confirmAction) {
+        showModal: function (title, message, confirmMessage, confirmAction) {
+            this.modalData.title = title;
             this.modalData.content = message;
             this.modalData.actionButton.text = confirmMessage;
             this.modalData.actionButton.action = confirmAction;
             this.modalData.active = true;
         },
         showStatusInfo: function () {
-            this.showModal(
-                `Connection Information<br>
-                <br>
-                Connection: ${this.statusInfo.message}<br>
+            this.showModal('Connection Information',
+                `Connection: ${this.statusInfo.message}<br>
                 Authenticated: No`
             );
         },
+        showEquipmentConstraintInfo: function () {
+            this.showModal('No Equipment Constraint',
+                `<div style="display:flex; align-items: center;">
+                <img src="/images/brick.svg" alt="NoEquipmentContraintSymbol">
+                <div style="margin-left: 0.5em;">
+                When this symbol appears in the top-right corner of a mission, the following constraint is applied:<br><br>
+                <em>"No equipment may be touching any part of this mission model at the end of the match to score for this mission."</em>
+                </div>
+                </div>`
+            );
+        },
         clearScoresheet: function () {
-            this.showModal(
+            this.showModal('Confirmation Required',
                 `Are you sure you want to clear the scoresheet?<br>
                 <br>
                 This action cannot be undone`,
@@ -97,7 +108,7 @@ const app = new Vue({
             );
         },
         defaultScoresheet: function () {
-            this.showModal(
+            this.showModal('Confirmation Required',
                 `Are you sure you want to set the scoresheet to defaults?<br>
                 <br>
                 This action cannot be undone`,
@@ -163,7 +174,7 @@ document.body.onload = async function () {
     const header = document.getElementById('header');
     setTimeout(()=>{
         document.getElementById('scoresheet').style.marginTop = header.offsetHeight +10+ 'px';
-    }, 100);
+    }, 50);
 
     app.teams = await (await fetch('/teams')).json();
     app.rounds = await (await fetch('/rounds')).json();

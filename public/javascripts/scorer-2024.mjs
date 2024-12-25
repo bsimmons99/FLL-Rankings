@@ -271,7 +271,9 @@ const challenges = {
                 {
                     "id": "x1",
                     "description": "1x Coral Tree, 1x Shark, 3x Reef Segments, 1x SCUBA Diver, 1x Treasure Chest, 1x Unknown Creature, 5x Krill, 3x Samples (Water, Seabed, Plankton), 2x Trident Parts, 1x Research Vessel, 6x Precision Tokens",
-                    "options": []
+                    "options": [],
+                    // "options": ['1x Coral Tree', '1x Shark', '3x Reef Segments', '1x SCUBA Diver', '1x Treasure Chest', '1x Unknown Creature', '5x Krill', '3x Samples (Water, Seabed, Plankton)', '2x Trident Parts', '1x Research Vessel', '6x Precision Tokens'],
+                    // "display": {"multi_line": true}
                 }
             ]
         },
@@ -282,7 +284,8 @@ const challenges = {
                 {
                     "id": "gpa",
                     "description": "Gracious Professionalism® displayed at the robot game table",
-                    "options": ["Developing 2", "Accomplished 3", "Exceeds 4"]
+                    "options": ["Developing 2", "Accomplished 3", "Exceeds 4"],
+                    "display": {"multi_line": true}
                 }
             ]
         }

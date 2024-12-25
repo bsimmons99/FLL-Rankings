@@ -46,11 +46,16 @@
       </div>
 
       <div v-for="mission in challenges.missions" class="mission">
-        <span><span v-if="mission.mission" class="mission-id">{{ mission.mission }}</span> <span
-            class="mission-description">{{ mission.description }}</span></span>
+        <div class="mission-header">
+          <span v-if="mission.mission" class="mission-id">{{ mission.mission }}</span>
+          <span class="mission-description">{{ mission.description }}</span>
+          <div style="flex-grow: 1;"></div>
+          <img v-if="mission.equipment_constraint" title="No equipment constraint" class="equipment-constraint clickable" src="/images/brick.svg" alt="NoEquipmentContraintSymbol" v-on:click="showEquipmentConstraintInfo">
+        </div>
+        <div v-if="mission.hint" class="hint">{{ mission.hint }}</div>
         <div v-for="(quest, index) in mission.quests" class="quest">
           <div class="quest-description">{{ quest.description }}</div>
-          <div v-if="quest.options.length > 0" class="options">
+          <div v-if="quest.options.length > 0" class="options" v-bind:class="{'multi-line': quest.display?.multi_line}">
             <label class="clickable option" v-for="option in quest.options"
               v-bind:for="`radio_${mission.mission}_${index}_${option}`"
               v-bind:class="{'selected': (answers[quest.id] === option)}">
@@ -81,6 +86,7 @@
       <!-- Modal content -->
       <div class="modal-content">
         <!-- <span v-on:click="hideModal" class="close clickable">&times;</span> -->
+        <h2>{{ modalData.title }}</h2>
         <p v-html="modalData.content"></p>
         <button v-on:click="hideModal">{{ modalData.actionButton.text ? 'Cancel' : 'Close' }}</button>
         <button v-show="modalData.actionButton.text" v-on:click="modalData.actionButton.action()">

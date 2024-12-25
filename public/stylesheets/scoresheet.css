@@ -53,12 +53,17 @@ header {
     margin: 1em;
     background-color: #eeeeee;
     padding: 1em;
-    padding-top: 5px;
+    padding-top: 0px;
     padding-left: 0px;
     border-style: solid;
     border-color: #007633;
     border-width: 3px;
     border-radius: 0px 20px 20px;
+}
+
+.mission-header {
+    display: flex;
+    align-items: center;
 }
 
 .mission-id {
@@ -74,6 +79,17 @@ header {
     /* font-size: large; */
     font-size: 125%;
     font-weight: bold;
+    padding-left: 0.5em;
+}
+
+.equipment-constraint {
+    height: 39px;
+    margin-right: 0.9em;
+}
+
+.hint {
+    margin: 0.5em;
+    color: limegreen;
 }
 
 .quest {
@@ -99,6 +115,11 @@ header {
     /* flex-wrap: wrap; */
     flex-shrink: 0;
     justify-content: flex-end;
+}
+
+.options.multi-line {
+    flex-wrap: wrap;
+    flex-shrink: 1;
 }
 
 .options .option {
@@ -162,5 +183,8 @@ select, button {
         width: 100%;
         border-style: hidden;
         padding: 0em;
+    }
+    .equipment-constraint {
+        height: 67.27px;
     }
 }
