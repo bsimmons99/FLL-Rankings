@@ -52,6 +52,9 @@
           <div style="flex-grow: 1;"></div>
           <img v-if="mission.equipment_constraint" title="No equipment constraint" class="equipment-constraint clickable" src="/images/brick.svg" alt="NoEquipmentContraintSymbol" v-on:click="showEquipmentConstraintInfo">
         </div>
+        <div class="model-image">
+          <img v-bind:src="`/images/season/2025/models/${mission.mission}.png`" onerror="event.target.remove()">
+        </div>
         <div v-if="mission.hint" class="hint">{{ mission.hint }}</div>
         <div v-for="(quest, index) in mission.quests" class="quest">
           <div class="quest-description">{{ quest.description }}</div>

@@ -87,6 +87,13 @@ header {
     margin-right: 0.9em;
 }
 
+.model-image {
+    margin: auto;
+}
+
+.model-image > img {
+}
+
 .hint {
     margin: 0.5em;
     color: limegreen;

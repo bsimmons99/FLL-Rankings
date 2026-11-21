@@ -6,7 +6,7 @@ const debug_req = require('debug')('fll-rankings:index-request');
 const timer = require('../timerctl');
 const fs = require('fs/promises');
 
-const default_event = 3;
+const default_event = 5;
 
 let scorer;
 (async () => {

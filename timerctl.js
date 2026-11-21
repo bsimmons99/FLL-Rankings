@@ -80,7 +80,7 @@ function initialise(server) {
             const timeNow = Date.now();
             // Check we have had a pong recently
             if (wsockets[id].lastPong !== 0 && timeNow - wsockets[id].lastPong > 30000) {
-                // Close the socket, but warn for now
+                // TODO: Close the socket, but warn for now
                 debug('Warning! Socket has timed out!', id);
             }
             ws.send(JSON.stringify({type: 'latency-ping', value: timeNow}));
